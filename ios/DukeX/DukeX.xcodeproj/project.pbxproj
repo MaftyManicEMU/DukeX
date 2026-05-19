@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E8CDF262FBC47BC00E001F3 /* MetalPresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CDF252FBC47B800E001F3 /* MetalPresenterView.swift */; };
+		4E8CDF2A2FBC484A00E001F3 /* ExitOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CDF292FBC484700E001F3 /* ExitOverlayView.swift */; };
+		4E8CDF2D2FBC48C300E001F3 /* Melo-Controller in Frameworks */ = {isa = PBXBuildFile; productRef = 4E8CDF2C2FBC48C300E001F3 /* Melo-Controller */; };
+		4E8CDF302FBC48D700E001F3 /* XboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CDF2F2FBC48D700E001F3 /* XboxController.swift */; };
+		4E8CDF332FBC490F00E001F3 /* ControllerHandlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CDF322FBC490F00E001F3 /* ControllerHandlerView.swift */; };
+		4E8CDF372FBC4A4400E001F3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CDF362FBC4A2C00E001F3 /* ContentView.swift */; };
 		A10000000000000000000001 /* DukeXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* DukeXApp.swift */; };
-		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* ContentView.swift */; };
+		A10000000000000000000002 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* MainTabView.swift */; };
 		A10000000000000000000003 /* EmulatorFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* EmulatorFileStore.swift */; };
 		A10000000000000000000004 /* XemuLaunchPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000014 /* XemuLaunchPlan.swift */; };
 		A10000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* Assets.xcassets */; };
@@ -20,7 +26,6 @@
 		B10000000000000000000004 /* SettingsRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000014 /* SettingsRows.swift */; };
 		B10000000000000000000005 /* AutoJITCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000015 /* AutoJITCoordinator.swift */; };
 		B10000000000000000000006 /* LaunchPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000016 /* LaunchPlanView.swift */; };
-		B10000000000000000000007 /* NativeMetalPresenterHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000017 /* NativeMetalPresenterHost.swift */; };
 		B10000000000000000000008 /* XISOGameTitleReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000018 /* XISOGameTitleReader.swift */; };
 		B10000000000000000000009 /* EmulatorLibraryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000019 /* EmulatorLibraryModels.swift */; };
 		B1000000000000000000000A /* InsigniaProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000001A /* InsigniaProfileStore.swift */; };
@@ -34,7 +39,6 @@
 		C10000000000000000000007 /* ProfileRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000017 /* ProfileRows.swift */; };
 		C10000000000000000000008 /* NativeMetalPresenterSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000018 /* NativeMetalPresenterSession.swift */; };
 		C10000000000000000000009 /* NativeMetalPresenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000019 /* NativeMetalPresenterViewController.swift */; };
-		C1000000000000000000000A /* GameplayExitOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001A /* GameplayExitOverlayView.swift */; };
 		C1000000000000000000000B /* DisplayStatsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001B /* DisplayStatsModels.swift */; };
 		C1000000000000000000000C /* DisplayStatsBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001C /* DisplayStatsBridge.swift */; };
 		C1000000000000000000000D /* AppResourceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001D /* AppResourceMonitor.swift */; };
@@ -51,9 +55,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E8CDF252FBC47B800E001F3 /* MetalPresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPresenterView.swift; sourceTree = "<group>"; };
+		4E8CDF292FBC484700E001F3 /* ExitOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitOverlayView.swift; sourceTree = "<group>"; };
+		4E8CDF2F2FBC48D700E001F3 /* XboxController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XboxController.swift; sourceTree = "<group>"; };
+		4E8CDF322FBC490F00E001F3 /* ControllerHandlerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerHandlerView.swift; sourceTree = "<group>"; };
+		4E8CDF362FBC4A2C00E001F3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A10000000000000000000010 /* DukeX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DukeX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000011 /* DukeXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DukeXApp.swift; sourceTree = "<group>"; };
-		A10000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		A10000000000000000000013 /* EmulatorFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorFileStore.swift; sourceTree = "<group>"; };
 		A10000000000000000000014 /* XemuLaunchPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XemuLaunchPlan.swift; sourceTree = "<group>"; };
 		A10000000000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -67,7 +76,6 @@
 		B10000000000000000000014 /* SettingsRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRows.swift; sourceTree = "<group>"; };
 		B10000000000000000000015 /* AutoJITCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoJITCoordinator.swift; sourceTree = "<group>"; };
 		B10000000000000000000016 /* LaunchPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchPlanView.swift; sourceTree = "<group>"; };
-		B10000000000000000000017 /* NativeMetalPresenterHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMetalPresenterHost.swift; sourceTree = "<group>"; };
 		B10000000000000000000018 /* XISOGameTitleReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XISOGameTitleReader.swift; sourceTree = "<group>"; };
 		B10000000000000000000019 /* EmulatorLibraryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorLibraryModels.swift; sourceTree = "<group>"; };
 		B1000000000000000000001A /* InsigniaProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsigniaProfileStore.swift; sourceTree = "<group>"; };
@@ -81,7 +89,6 @@
 		C10000000000000000000017 /* ProfileRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRows.swift; sourceTree = "<group>"; };
 		C10000000000000000000018 /* NativeMetalPresenterSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMetalPresenterSession.swift; sourceTree = "<group>"; };
 		C10000000000000000000019 /* NativeMetalPresenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMetalPresenterViewController.swift; sourceTree = "<group>"; };
-		C1000000000000000000001A /* GameplayExitOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayExitOverlayView.swift; sourceTree = "<group>"; };
 		C1000000000000000000001B /* DisplayStatsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayStatsModels.swift; sourceTree = "<group>"; };
 		C1000000000000000000001C /* DisplayStatsBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayStatsBridge.swift; sourceTree = "<group>"; };
 		C1000000000000000000001D /* AppResourceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppResourceMonitor.swift; sourceTree = "<group>"; };
@@ -102,12 +109,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E8CDF2D2FBC48C300E001F3 /* Melo-Controller in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E8CDF312FBC48DF00E001F3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4E8CDF2F2FBC48D700E001F3 /* XboxController.swift */,
+				4E8CDF322FBC490F00E001F3 /* ControllerHandlerView.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		A10000000000000000000030 = {
 			isa = PBXGroup;
 			children = (
@@ -142,7 +159,8 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000011 /* DukeXApp.swift */,
-				A10000000000000000000012 /* ContentView.swift */,
+				4E8CDF362FBC4A2C00E001F3 /* ContentView.swift */,
+				A10000000000000000000012 /* MainTabView.swift */,
 				C10000000000000000000011 /* AppNotifications.swift */,
 				C10000000000000000000012 /* GameControllerBootstrap.swift */,
 				C10000000000000000000013 /* MetalDiagnostics.swift */,
@@ -172,34 +190,6 @@
 			path = Games;
 			sourceTree = "<group>";
 		};
-		F10000000000000000000100 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				C10000000000000000000014 /* GameCoverTile.swift */,
-				C10000000000000000000015 /* GamesEmptyState.swift */,
-				E10000000000000000000011 /* LiveStatusBadge.swift */,
-				F10000000000000000000014 /* GameSortPicker.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000101 /* State */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000011 /* GameLibrarySortMode.swift */,
-				F10000000000000000000012 /* GameLibraryCollections.swift */,
-			);
-			path = State;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000102 /* Layout */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000013 /* GameLibraryGridMetrics.swift */,
-			);
-			path = Layout;
-			sourceTree = "<group>";
-		};
 		D10000000000000000000112 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,14 +208,6 @@
 				F10000000000000000000103 /* Library */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000103 /* Library */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000015 /* LibraryColumnSettingsView.swift */,
-			);
-			path = Library;
 			sourceTree = "<group>";
 		};
 		D10000000000000000000114 /* Launch */ = {
@@ -308,7 +290,8 @@
 		D10000000000000000000140 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				B10000000000000000000017 /* NativeMetalPresenterHost.swift */,
+				4E8CDF312FBC48DF00E001F3 /* Controller */,
+				4E8CDF252FBC47B800E001F3 /* MetalPresenterView.swift */,
 				C10000000000000000000018 /* NativeMetalPresenterSession.swift */,
 				C10000000000000000000019 /* NativeMetalPresenterViewController.swift */,
 				D10000000000000000000141 /* Metal */,
@@ -341,7 +324,7 @@
 		D10000000000000000000143 /* ExitOverlay */ = {
 			isa = PBXGroup;
 			children = (
-				C1000000000000000000001A /* GameplayExitOverlayView.swift */,
+				4E8CDF292FBC484700E001F3 /* ExitOverlayView.swift */,
 			);
 			path = ExitOverlay;
 			sourceTree = "<group>";
@@ -372,6 +355,42 @@
 				A10000000000000000000017 /* DukeX.entitlements */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000100 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C10000000000000000000014 /* GameCoverTile.swift */,
+				C10000000000000000000015 /* GamesEmptyState.swift */,
+				E10000000000000000000011 /* LiveStatusBadge.swift */,
+				F10000000000000000000014 /* GameSortPicker.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000101 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000011 /* GameLibrarySortMode.swift */,
+				F10000000000000000000012 /* GameLibraryCollections.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000102 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000013 /* GameLibraryGridMetrics.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000103 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000015 /* LibraryColumnSettingsView.swift */,
+			);
+			path = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -419,6 +438,9 @@
 				Base,
 			);
 			mainGroup = A10000000000000000000030;
+			packageReferences = (
+				4E8CDF2B2FBC48C200E001F3 /* XCRemoteSwiftPackageReference "Melo-Controller" */,
+			);
 			productRefGroup = A10000000000000000000032 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -447,18 +469,18 @@
 			);
 			inputFileListPaths = (
 			);
-				inputPaths = (
-					"$(SRCROOT)/../scripts/embed-core-ios.sh",
-					"$(SRCROOT)/../../build-ios-arm64/libxemu-ios-core.dylib",
-					"$(SRCROOT)/../../build-ios-arm64/subprojects/slirp/libslirp.0.dylib",
-				);
+			inputPaths = (
+				"$(SRCROOT)/../scripts/embed-core-ios.sh",
+				"$(SRCROOT)/../../build-ios-arm64/libxemu-ios-core.dylib",
+				"$(SRCROOT)/../../build-ios-arm64/subprojects/slirp/libslirp.0.dylib",
+			);
 			name = "Embed Core Runtime";
 			outputFileListPaths = (
 			);
-				outputPaths = (
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libxemu-ios-core.dylib",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libslirp.0.dylib",
-				);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libxemu-ios-core.dylib",
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libslirp.0.dylib",
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/../scripts/embed-core-ios.sh\"\n";
@@ -471,27 +493,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000001 /* DukeXApp.swift in Sources */,
-				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000002 /* MainTabView.swift in Sources */,
 				C10000000000000000000001 /* AppNotifications.swift in Sources */,
 				C10000000000000000000002 /* GameControllerBootstrap.swift in Sources */,
 				C10000000000000000000003 /* MetalDiagnostics.swift in Sources */,
 				B10000000000000000000001 /* GamesLibraryView.swift in Sources */,
-					C10000000000000000000004 /* GameCoverTile.swift in Sources */,
-					C10000000000000000000005 /* GamesEmptyState.swift in Sources */,
-					E10000000000000000000001 /* LiveStatusBadge.swift in Sources */,
-					F10000000000000000000001 /* GameLibrarySortMode.swift in Sources */,
-					F10000000000000000000002 /* GameLibraryCollections.swift in Sources */,
-					F10000000000000000000003 /* GameLibraryGridMetrics.swift in Sources */,
-					F10000000000000000000004 /* GameSortPicker.swift in Sources */,
-					B10000000000000000000002 /* ProfileView.swift in Sources */,
-					C10000000000000000000006 /* ProfileLoginView.swift in Sources */,
-					C10000000000000000000007 /* ProfileRows.swift in Sources */,
-					B1000000000000000000000A /* InsigniaProfileStore.swift in Sources */,
-					E10000000000000000000002 /* InsigniaLiveStatusStore.swift in Sources */,
-					B1000000000000000000000B /* SettingsView.swift in Sources */,
-					B10000000000000000000004 /* SettingsRows.swift in Sources */,
-					F10000000000000000000005 /* LibraryColumnSettingsView.swift in Sources */,
-					B10000000000000000000003 /* DocumentImportPicker.swift in Sources */,
+				C10000000000000000000004 /* GameCoverTile.swift in Sources */,
+				C10000000000000000000005 /* GamesEmptyState.swift in Sources */,
+				E10000000000000000000001 /* LiveStatusBadge.swift in Sources */,
+				F10000000000000000000001 /* GameLibrarySortMode.swift in Sources */,
+				F10000000000000000000002 /* GameLibraryCollections.swift in Sources */,
+				F10000000000000000000003 /* GameLibraryGridMetrics.swift in Sources */,
+				F10000000000000000000004 /* GameSortPicker.swift in Sources */,
+				B10000000000000000000002 /* ProfileView.swift in Sources */,
+				C10000000000000000000006 /* ProfileLoginView.swift in Sources */,
+				C10000000000000000000007 /* ProfileRows.swift in Sources */,
+				4E8CDF262FBC47BC00E001F3 /* MetalPresenterView.swift in Sources */,
+				B1000000000000000000000A /* InsigniaProfileStore.swift in Sources */,
+				E10000000000000000000002 /* InsigniaLiveStatusStore.swift in Sources */,
+				B1000000000000000000000B /* SettingsView.swift in Sources */,
+				B10000000000000000000004 /* SettingsRows.swift in Sources */,
+				F10000000000000000000005 /* LibraryColumnSettingsView.swift in Sources */,
+				B10000000000000000000003 /* DocumentImportPicker.swift in Sources */,
 				B10000000000000000000005 /* AutoJITCoordinator.swift in Sources */,
 				B10000000000000000000006 /* LaunchPlanView.swift in Sources */,
 				B10000000000000000000009 /* EmulatorLibraryModels.swift in Sources */,
@@ -499,10 +522,11 @@
 				B10000000000000000000008 /* XISOGameTitleReader.swift in Sources */,
 				A10000000000000000000006 /* EmulatorCoreRuntime.swift in Sources */,
 				A10000000000000000000004 /* XemuLaunchPlan.swift in Sources */,
-				B10000000000000000000007 /* NativeMetalPresenterHost.swift in Sources */,
+				4E8CDF302FBC48D700E001F3 /* XboxController.swift in Sources */,
+				4E8CDF2A2FBC484A00E001F3 /* ExitOverlayView.swift in Sources */,
 				C10000000000000000000008 /* NativeMetalPresenterSession.swift in Sources */,
+				4E8CDF372FBC4A4400E001F3 /* ContentView.swift in Sources */,
 				C10000000000000000000009 /* NativeMetalPresenterViewController.swift in Sources */,
-				C1000000000000000000000A /* GameplayExitOverlayView.swift in Sources */,
 				C1000000000000000000000B /* DisplayStatsModels.swift in Sources */,
 				C1000000000000000000000C /* DisplayStatsBridge.swift in Sources */,
 				C1000000000000000000000D /* AppResourceMonitor.swift in Sources */,
@@ -510,6 +534,7 @@
 				C1000000000000000000000F /* NativeMetalPresenterView.swift in Sources */,
 				C10000000000000000000010 /* LayerConfigurators.swift in Sources */,
 				A10000000000000000000007 /* EarlyMetalDiagnostics.m in Sources */,
+				4E8CDF332FBC490F00E001F3 /* ControllerHandlerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,7 +664,7 @@
 				CODE_SIGN_ENTITLEMENTS = DukeX/DukeX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 100;
-					DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DukeX/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -648,7 +673,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-					PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
 				PRODUCT_NAME = DukeX;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -668,7 +693,7 @@
 				CODE_SIGN_ENTITLEMENTS = DukeX/DukeX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 100;
-					DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DukeX/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -677,7 +702,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-					PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
 				PRODUCT_NAME = DukeX;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -711,6 +736,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4E8CDF2B2FBC48C200E001F3 /* XCRemoteSwiftPackageReference "Melo-Controller" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stossy11/Melo-Controller";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4E8CDF2C2FBC48C300E001F3 /* Melo-Controller */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E8CDF2B2FBC48C200E001F3 /* XCRemoteSwiftPackageReference "Melo-Controller" */;
+			productName = "Melo-Controller";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000000000000000000060 /* Project object */;
 }

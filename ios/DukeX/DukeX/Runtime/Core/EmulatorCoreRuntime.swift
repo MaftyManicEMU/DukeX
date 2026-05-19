@@ -61,7 +61,7 @@ final class EmulatorCoreRuntime: ObservableObject {
         NSLog("Xemu core runtime refreshed: %@", String(describing: state))
     }
 
-    func launch(plan: XemuLaunchPlan) {
+    func launch(plan: XemuLaunchPlan, layer: UnsafeMutableRawPointer) {
         guard !state.isRunning else {
             return
         }
@@ -87,13 +87,10 @@ final class EmulatorCoreRuntime: ObservableObject {
                     entryPoint,
                     arguments: arguments,
                     jitMode: jitMode,
+                    layer: layer,
                     universalJITEnabled: universalJITEnabled,
                     setExternalMetalLayer: setExternalMetalLayer,
-                    requestShutdown: requestShutdown,
-                    session: NativeMetalPresenterSession(
-                        title: plan.gameName,
-                        isDashboard: plan.isDashboard
-                    )
+                    requestShutdown: requestShutdown
                 )
 
                 Task { @MainActor [weak self] in
@@ -269,27 +266,27 @@ final class EmulatorCoreRuntime: ObservableObject {
         _ entryPoint: XemuMain,
         arguments: [String],
         jitMode: RuntimeJITMode,
+        layer: UnsafeMutableRawPointer,
         universalJITEnabled: Bool,
         setExternalMetalLayer: XemuSetExternalMetalLayer?,
-        requestShutdown: XemuRequestShutdown?,
-        session: NativeMetalPresenterSession
+        requestShutdown: XemuRequestShutdown?
     ) -> Int32 {
         MetalDiagnostics.configurePerformanceHUD()
         let bundleIdentifier = Bundle.main.bundleIdentifier?.lowercased() ?? ""
-        let useVulkanSwapchain = bundleIdentifier.hasPrefix("com.mafty.dukex")
+        
         let presentPacingMode = PresentPacingMode.current
         let forceThirtyFPSLock =
-            UserDefaults.standard.object(forKey: EmulatorFileStore.forceThirtyFPSLockEnabledKey) as? Bool ?? false
+        UserDefaults.standard.object(forKey: EmulatorFileStore.forceThirtyFPSLockEnabledKey) as? Bool ?? false
         let effectivePresentFPS = forceThirtyFPSLock ? "30" : presentPacingMode.presentFPS
         let effectivePresentMode = forceThirtyFPSLock ? "fifo" : presentPacingMode.vulkanPresentMode
         let effectiveDisplaySync = forceThirtyFPSLock ? true : presentPacingMode.displaySyncEnabled
         let effectiveNominalFPS = forceThirtyFPSLock ? "30" : presentPacingMode.nominalFramesPerSecond
-
+        
         setEnvironment([
             ("XEMU_IOS_JIT_MODE", jitMode.environmentValue),
             ("XEMU_IOS_UNIVERSAL_JIT", universalJITEnabled ? "1" : "0"),
-            ("XEMU_IOS_VK_SWAPCHAIN", useVulkanSwapchain ? "1" : "0"),
-            ("XEMU_IOS_NATIVE_METAL_PRESENTER", useVulkanSwapchain ? "1" : "0"),
+            ("XEMU_IOS_VK_SWAPCHAIN", "1"),
+            ("XEMU_IOS_NATIVE_METAL_PRESENTER", "1"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_SCALE", "1.0"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_ALIGN_X", "0.5"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_ALIGN_Y", "0.5"),
@@ -313,7 +310,7 @@ final class EmulatorCoreRuntime: ObservableObject {
             ("XEMU_IOS_TCG_WATCHDOG", "off"),
             ("XEMU_IOS_COROUTINE_PRIME_COUNT", "640")
         ])
-
+        
         setEnvironment([
             ("XEMU_IOS_VK_SWAPCHAIN_TRACE", "0"),
             ("XEMU_IOS_DISPLAY_PERF_STATS", "0"),
@@ -343,7 +340,7 @@ final class EmulatorCoreRuntime: ObservableObject {
             ("XEMU_IOS_TCG_EXIT_TRACE", "0"),
             ("XEMU_IOS_NET_TRACE", "0")
         ])
-
+        
         unsetEnvironment([
             "XEMU_IOS_TCG_MAX_INSNS",
             "XEMU_IOS_TCG_IRQ_INSNS",
@@ -352,7 +349,7 @@ final class EmulatorCoreRuntime: ObservableObject {
         ])
         NSLog("XEMU_IOS_JIT_MODE=%@", jitMode.environmentValue)
         NSLog("XEMU_IOS_UNIVERSAL_JIT=%@", universalJITEnabled ? "1" : "0")
-        NSLog("XEMU_IOS_VK_SWAPCHAIN=%@", useVulkanSwapchain ? "1" : "0")
+        NSLog("XEMU_IOS_VK_SWAPCHAIN=%@", "1")
         NSLog(
             "XEMU_IOS_PRESENT_PACING=%@ force30=%@ mode=%@ displaySync=%@ nominalFPS=%@ presentFPS=%@",
             presentPacingMode.rawValue,
@@ -363,31 +360,15 @@ final class EmulatorCoreRuntime: ObservableObject {
             effectivePresentFPS
         )
         NSLog("Xemu core argv: %@", arguments.joined(separator: " "))
-
-        let presenterHost = useVulkanSwapchain ? NativeMetalPresenterHost() : nil
-        if let presenterHost {
-            if let layerPointer = presenterHost.start(
-                session: session,
-                onExitRequested: {
-                    NotificationCenter.default.post(name: .dukeXReturnToGamesRequested, object: nil)
-                    requestShutdown?()
-                }
-            ) {
-                setExternalMetalLayer?(layerPointer)
-                NSLog(
-                    "Native CAMetalLayer presenter active: 0x%llx",
-                    UInt64(UInt(bitPattern: layerPointer))
-                )
-            } else {
-                setExternalMetalLayer?(nil)
-                NSLog("Native CAMetalLayer presenter unavailable; falling back to SDL Metal layer")
-            }
-        }
+        
+        
+        setExternalMetalLayer?(layer)
+        NSLog(
+            "Native CAMetalLayer presenter active: 0x%llx",
+            UInt64(UInt(bitPattern: layer))
+        )
         defer {
-            if useVulkanSwapchain {
-                setExternalMetalLayer?(nil)
-                presenterHost?.stop()
-            }
+            setExternalMetalLayer?(nil)
         }
 
         let argv = arguments.map { strdup($0) } + [nil]

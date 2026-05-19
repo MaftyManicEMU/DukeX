@@ -1,6 +1,31 @@
 import Metal
 import QuartzCore
 import UIKit
+import SwiftUI
+
+struct NativeMetalPresenterViewRepresenable: UIViewRepresentable {
+    var onLayerReady: (UnsafeMutableRawPointer) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    func makeUIView(context: Context) -> NativeMetalPresenterView {
+        NativeMetalPresenterView(frame: .zero)
+    }
+
+    func updateUIView(_ uiView: NativeMetalPresenterView, context: Context) {
+        uiView.updateDrawableSize()
+
+        guard !context.coordinator.hasFired, uiView.bounds != .zero else { return }
+        context.coordinator.hasFired = true
+
+        let ptr = Unmanaged.passUnretained(uiView.metalLayer).toOpaque()
+        onLayerReady(ptr)
+    }
+
+    final class Coordinator {
+        var hasFired = false
+    }
+}
 
 final class NativeMetalPresenterView: UIView {
     override class var layerClass: AnyClass {

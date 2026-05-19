@@ -27,6 +27,7 @@
 #include "qemu/option.h"
 #include "qemu/timer.h"
 #include "qemu/config-file.h"
+#include "qemu/atomic.h"
 
 #include "xemu-input.h"
 #include "xemu-notifications.h"
@@ -286,6 +287,9 @@ static ControllerState *xemu_input_find_sdl_gamepad(SDL_JoystickID instance_id)
 
 #ifdef CONFIG_IOS
 static int64_t s_ios_last_gamepad_scan_ts;
+static ControllerState *s_ios_touch_controller;
+static int s_ios_touch_buttons;
+static int s_ios_touch_axis[CONTROLLER_AXIS__COUNT];
 
 static bool xemu_input_has_sdl_gamepad(void)
 {
@@ -298,6 +302,50 @@ static bool xemu_input_has_sdl_gamepad(void)
     }
 
     return false;
+}
+
+static ControllerState *xemu_input_create_ios_touch_controller(void)
+{
+    ControllerState *new_con = g_new0(ControllerState, 1);
+    new_con->type = INPUT_DEVICE_IOS_TOUCH;
+    new_con->name = "DukeX Touch Controller";
+    new_con->bound = -1;
+    new_con->peripheral_types[0] = PERIPHERAL_NONE;
+    new_con->peripheral_types[1] = PERIPHERAL_NONE;
+
+    QTAILQ_INSERT_TAIL(&available_controllers, new_con, entry);
+    IOS_INPUT_LOG("created virtual touch controller");
+    return new_con;
+}
+
+static void xemu_input_bind_ios_touch_controller_if_needed(void)
+{
+    if (!s_ios_touch_controller || xemu_input_has_sdl_gamepad()) {
+        return;
+    }
+
+    if (s_ios_touch_controller->bound >= 0) {
+        return;
+    }
+
+    if (xemu_input_get_bound(0)) {
+        return;
+    }
+
+    xemu_input_bind(0, s_ios_touch_controller, 0);
+    xemu_input_rebind_xmu(0);
+    IOS_INPUT_LOG("bound virtual touch controller to port 1");
+}
+
+static void xemu_input_unbind_ios_touch_controller(void)
+{
+    if (!s_ios_touch_controller || s_ios_touch_controller->bound < 0) {
+        return;
+    }
+
+    int bound = s_ios_touch_controller->bound;
+    xemu_input_bind(bound, NULL, 0);
+    IOS_INPUT_LOG("unbound virtual touch controller from port %d", bound + 1);
 }
 
 static void xemu_input_scan_existing_gamepads(bool verbose)
@@ -396,9 +444,11 @@ void xemu_input_init(void)
     QTAILQ_INSERT_TAIL(&available_controllers, new_con, entry);
 
 #ifdef CONFIG_IOS
+    s_ios_touch_controller = xemu_input_create_ios_touch_controller();
     SDL_PumpEvents();
     s_ios_last_gamepad_scan_ts = qemu_clock_get_us(QEMU_CLOCK_REALTIME);
     xemu_input_scan_existing_gamepads(true);
+    xemu_input_bind_ios_touch_controller_if_needed();
 #endif
 }
 
@@ -481,6 +531,9 @@ void xemu_input_process_sdl_events(const SDL_Event *event)
 
         QTAILQ_INSERT_TAIL(&available_controllers, new_con, entry);
         xemu_input_bindings_reload_map(new_con);
+#ifdef CONFIG_IOS
+        xemu_input_unbind_ios_touch_controller();
+#endif
 
         // Do not replace binding for a currently bound device. In the case that
         // the same GUID is specified multiple times, on different ports, allow
@@ -584,6 +637,9 @@ void xemu_input_process_sdl_events(const SDL_Event *event)
         if (!handled) {
             DPRINTF("Could not find handle for joystick instance\n");
         }
+#ifdef CONFIG_IOS
+        xemu_input_bind_ios_touch_controller_if_needed();
+#endif
     } else if (event->type == SDL_EVENT_GAMEPAD_REMAPPED) {
         DPRINTF("Controller Remapped: %d\n", event->gdevice.which);
     }
@@ -601,6 +657,13 @@ void xemu_input_update_controller(ControllerState *state)
         xemu_input_update_sdl_kbd_controller_state(state);
     } else if (state->type == INPUT_DEVICE_SDL_GAMEPAD) {
         xemu_input_update_sdl_controller_state(state);
+#ifdef CONFIG_IOS
+    } else if (state->type == INPUT_DEVICE_IOS_TOUCH) {
+        state->buttons = (uint16_t)qatomic_read(&s_ios_touch_buttons);
+        for (int i = 0; i < CONTROLLER_AXIS__COUNT; i++) {
+            state->axis[i] = (int16_t)qatomic_read(&s_ios_touch_axis[i]);
+        }
+#endif
     }
 
     state->last_input_updated_ts = qemu_clock_get_us(QEMU_CLOCK_REALTIME);
@@ -1061,3 +1124,42 @@ void xemu_input_reset_input_mapping(ControllerState *state)
         xemu_settings_reset_keyboard_mapping();
     }
 }
+
+#ifdef CONFIG_IOS
+__attribute__((visibility("default")))
+void xemu_ios_touch_controller_set_button(int button_mask, int pressed)
+{
+    int old_buttons;
+    int new_buttons;
+
+    do {
+        old_buttons = qatomic_read(&s_ios_touch_buttons);
+        if (pressed) {
+            new_buttons = old_buttons | button_mask;
+        } else {
+            new_buttons = old_buttons & ~button_mask;
+        }
+    } while (qatomic_cmpxchg(&s_ios_touch_buttons, old_buttons, new_buttons) !=
+             old_buttons);
+}
+
+__attribute__((visibility("default")))
+void xemu_ios_touch_controller_set_axis(int axis, int value)
+{
+    if (axis < 0 || axis >= CONTROLLER_AXIS__COUNT) {
+        return;
+    }
+
+    value = CLAMP(value, -32768, 32767);
+    qatomic_set(&s_ios_touch_axis[axis], value);
+}
+
+__attribute__((visibility("default")))
+void xemu_ios_touch_controller_reset(void)
+{
+    qatomic_set(&s_ios_touch_buttons, 0);
+    for (int i = 0; i < CONTROLLER_AXIS__COUNT; i++) {
+        qatomic_set(&s_ios_touch_axis[i], 0);
+    }
+}
+#endif

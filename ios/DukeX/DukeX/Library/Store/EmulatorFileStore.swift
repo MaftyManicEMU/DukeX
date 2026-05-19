@@ -3,6 +3,11 @@ import Darwin
 import SwiftUI
 import UIKit
 
+enum PlayingState: Equatable {
+    case none
+    case running(plan: XemuLaunchPlan)
+}
+
 @MainActor
 final class EmulatorFileStore: ObservableObject {
     @Published private(set) var bios: LibraryFile?
@@ -10,6 +15,9 @@ final class EmulatorFileStore: ObservableObject {
     @Published private(set) var eeprom: LibraryFile?
     @Published private(set) var hdd: LibraryFile?
     @Published private(set) var games: [LibraryFile] = []
+    
+    @Published var playingState: PlayingState = .none
+    
     @Published var selectedGameID = "" {
         didSet {
             UserDefaults.standard.set(selectedGameID, forKey: Self.selectedGameIDKey)

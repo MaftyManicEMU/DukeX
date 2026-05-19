@@ -129,7 +129,7 @@ struct UserMessage: Identifiable {
     let detail: String
 }
 
-enum RuntimeJITMode: String {
+enum RuntimeJITMode: String, Equatable {
     case wxReprotection
     case universalJS
 

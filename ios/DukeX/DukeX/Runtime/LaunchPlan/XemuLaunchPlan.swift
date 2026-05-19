@@ -1,7 +1,7 @@
 import Foundation
 import Darwin
 
-struct XemuLaunchPlan: Identifiable {
+struct XemuLaunchPlan: Identifiable, Equatable {
     let id = UUID()
     let configURL: URL
     let arguments: [String]

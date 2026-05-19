@@ -9,6 +9,7 @@ struct DukeXApp: App {
 
     init() {
         MetalDiagnostics.configurePerformanceHUD()
+        resolveHandle()
         _ = GameControllerBootstrap.shared
     }
 
