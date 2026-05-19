@@ -13,6 +13,7 @@ struct MetalPresenterView: View {
     let session: NativeMetalPresenterSession
     let plan: XemuLaunchPlan
     let onExitRequest: () -> Void
+    @State var layerPtr: UnsafeMutableRawPointer? = nil
 
     init(plan: XemuLaunchPlan, runtime: EmulatorCoreRuntime, onExitRequested: @escaping () -> Void) {
         self.session = NativeMetalPresenterSession(
@@ -27,10 +28,15 @@ struct MetalPresenterView: View {
     var body: some View {
         ZStack {
             NativeMetalPresenterViewRepresenable { layerPtr in
-                self.runtime.launch(plan: plan, layer: layerPtr)
+                self.layerPtr = layerPtr
+                Task {
+                    try? await Task.sleep(nanoseconds: 100_000_000)
+                    
+                    self.runtime.launch(plan: plan, layer: layerPtr)
+                }
             }
             .ignoresSafeArea()
-
+        
             VStack {
                 HStack {
                     Button { showingExitOverlay = true } label: {

@@ -9,21 +9,15 @@ struct NativeMetalPresenterViewRepresenable: UIViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> NativeMetalPresenterView {
-        NativeMetalPresenterView(frame: .zero)
+        let view = NativeMetalPresenterView(frame: .zero)
+        let ptr = Unmanaged.passUnretained(view.metalLayer).toOpaque()
+        onLayerReady(ptr)
+        
+        return view
     }
 
     func updateUIView(_ uiView: NativeMetalPresenterView, context: Context) {
         uiView.updateDrawableSize()
-
-        guard !context.coordinator.hasFired, uiView.bounds != .zero else { return }
-        context.coordinator.hasFired = true
-
-        let ptr = Unmanaged.passUnretained(uiView.metalLayer).toOpaque()
-        onLayerReady(ptr)
-    }
-
-    final class Coordinator {
-        var hasFired = false
     }
 }
 
