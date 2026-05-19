@@ -50,13 +50,8 @@ struct MetalPresenterView: View {
                 }
                 Spacer()
             }
-            .ignoresSafeArea(edges: .all)
-            
             XboxControllerView()
-        }
-        .ignoresSafeArea()
-        .onDisappear {
-            
+                .ignoresSafeArea()
         }
         .gameplayExitOverlay(isPresented: $showingExitOverlay, session: session, onExitRequested: onExitRequest)
     }
