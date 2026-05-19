@@ -29,11 +29,7 @@ struct MetalPresenterView: View {
         ZStack {
             NativeMetalPresenterViewRepresenable { layerPtr in
                 self.layerPtr = layerPtr
-                Task {
-                    try? await Task.sleep(nanoseconds: 100_000_000)
-                    
-                    self.runtime.launch(plan: plan, layer: layerPtr)
-                }
+                self.runtime.launch(plan: plan, layer: layerPtr)
             }
             .ignoresSafeArea()
         

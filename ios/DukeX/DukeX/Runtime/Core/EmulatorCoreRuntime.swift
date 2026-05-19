@@ -4,7 +4,6 @@ import Metal
 import QuartzCore
 import UIKit
 
-@MainActor
 final class EmulatorCoreRuntime: ObservableObject {
     enum RunState: Equatable {
         case unavailable(String)
@@ -73,7 +72,7 @@ final class EmulatorCoreRuntime: ObservableObject {
             let universalJITEnabled = plan.universalJITEnabled
             let setExternalMetalLayer = loadSetExternalMetalLayer()
             let requestShutdown = loadRequestShutdown()
-
+            
             let logURL = Self.prepareRunLog(for: plan, arguments: arguments)
             state = .running(plan.gameName)
             NSLog("Launching Xemu core for %@", plan.gameName)
@@ -81,8 +80,8 @@ final class EmulatorCoreRuntime: ObservableObject {
                 NSLog("Xemu run log: %@", logURL.path)
             }
             GameControllerBootstrap.shared.logSnapshot(reason: "before core launch")
-
-            DispatchQueue.main.async {
+            
+            RunLoop.main.perform {
                 let status = Self.invoke(
                     entryPoint,
                     arguments: arguments,
@@ -92,11 +91,10 @@ final class EmulatorCoreRuntime: ObservableObject {
                     setExternalMetalLayer: setExternalMetalLayer,
                     requestShutdown: requestShutdown
                 )
-
-                Task { @MainActor [weak self] in
-                    NSLog("Xemu core exited with status %d", status)
-                    self?.state = .exited(status)
-                }
+                
+                
+                NSLog("Xemu core exited with status %d", status)
+                self.state = .exited(status)
             }
         } catch {
             NSLog("Xemu core launch failed: %@", error.localizedDescription)
