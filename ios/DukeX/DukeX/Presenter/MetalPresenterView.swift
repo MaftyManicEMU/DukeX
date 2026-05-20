@@ -56,3 +56,4 @@ struct MetalPresenterView: View {
         .gameplayExitOverlay(isPresented: $showingExitOverlay, session: session, onExitRequested: onExitRequest)
     }
 }
+

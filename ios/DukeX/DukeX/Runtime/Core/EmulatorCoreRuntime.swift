@@ -81,7 +81,7 @@ final class EmulatorCoreRuntime: ObservableObject {
             }
             GameControllerBootstrap.shared.logSnapshot(reason: "before core launch")
             
-            RunLoop.main.perform {
+            Task.detached(priority: .userInitiated) {
                 let status = Self.invoke(
                     entryPoint,
                     arguments: arguments,
