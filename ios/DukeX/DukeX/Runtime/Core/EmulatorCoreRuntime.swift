@@ -113,11 +113,9 @@ final class EmulatorCoreRuntime: ObservableObject {
         }
 
         _ = try loadEntryPoint()
-        Task.detached {
-            let primeCoroutines = try self.loadPrimeCoroutines()
-            NSLog("Pre-priming Xemu coroutine pool before StikDebug: %u", coroutineReserve)
-            primeCoroutines(coroutineReserve)
-        }
+        let primeCoroutines = try loadPrimeCoroutines()
+        NSLog("Pre-priming Xemu coroutine pool before StikDebug: %u", coroutineReserve)
+        primeCoroutines(coroutineReserve)
     }
 
     private func loadEntryPoint() throws -> XemuMain {
