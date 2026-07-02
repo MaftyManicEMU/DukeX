@@ -20,7 +20,7 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.mafty.dukex.launch</string>
+			<string>$(DUKEX_LAUNCH_URL_NAME)</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>dukex</string>

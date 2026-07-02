@@ -9,6 +9,7 @@ final class EmulatorFileStore: ObservableObject {
     @Published private(set) var mcpx: LibraryFile?
     @Published private(set) var eeprom: LibraryFile?
     @Published private(set) var hdd: LibraryFile?
+    @Published private(set) var jitPairingFile: LibraryFile?
     @Published private(set) var games: [LibraryFile] = []
     @Published private(set) var skins: [ManicSkinLibraryItem] = []
     @Published var selectedGameID = "" {
@@ -212,6 +213,7 @@ final class EmulatorFileStore: ObservableObject {
     let shaderCachesDirectoryURL: URL
     let skinsDirectoryURL: URL
     let cloudSavesDirectoryURL: URL
+    let pairingDirectoryURL: URL
 
     var selectedGame: LibraryFile? {
         games.first { $0.id == selectedGameID }
@@ -256,6 +258,10 @@ final class EmulatorFileStore: ObservableObject {
 
     var systemFilesReady: Bool {
         bios != nil && mcpx != nil && hdd != nil
+    }
+
+    var jitPairingFileURL: URL? {
+        jitPairingFile?.url
     }
 
     var isReady: Bool {
@@ -334,6 +340,7 @@ final class EmulatorFileStore: ObservableObject {
         shaderCachesDirectoryURL = documentsURL.appendingPathComponent("ShaderCaches", isDirectory: true)
         skinsDirectoryURL = documentsURL.appendingPathComponent("Skins", isDirectory: true)
         cloudSavesDirectoryURL = documentsURL.appendingPathComponent("CloudSaves", isDirectory: true)
+        pairingDirectoryURL = documentsURL.appendingPathComponent("Pairing", isDirectory: true)
         if UserDefaults.standard.object(forKey: Self.libraryTabsMigrationKey) == nil {
             UserDefaults.standard.set(false, forKey: Self.autoLaunchDashboardOnOpenKey)
             UserDefaults.standard.set(true, forKey: Self.libraryTabsMigrationKey)
@@ -418,6 +425,7 @@ final class EmulatorFileStore: ObservableObject {
         let systemFiles = try scanDirectory(biosDirectoryURL)
         let gameFiles = try scanDirectory(romsDirectoryURL)
         let skinFiles = try scanSkinsDirectory()
+        let pairingFiles = try scanDirectory(pairingDirectoryURL)
         mcpx = systemFiles
             .filter { $0.url.pathExtension.caseInsensitiveCompare("bin") == .orderedSame && $0.size == 512 }
             .sorted(by: sortByName)
@@ -439,6 +447,11 @@ final class EmulatorFileStore: ObservableObject {
 
         hdd = systemFiles
             .filter { isHDD($0) }
+            .sorted(by: sortByName)
+            .first
+
+        jitPairingFile = pairingFiles
+            .filter { $0.url.pathExtension.caseInsensitiveCompare("plist") == .orderedSame }
             .sorted(by: sortByName)
             .first
 
@@ -491,6 +504,8 @@ final class EmulatorFileStore: ObservableObject {
             switch target {
             case .skins:
                 importedSkinCount = try importSkinFiles(urls)
+            case .pairingFile:
+                try importPairingFile(urls)
             case .systemFiles, .games:
                 let destinationDirectory = target == .systemFiles ? biosDirectoryURL : romsDirectoryURL
 
@@ -517,6 +532,11 @@ final class EmulatorFileStore: ObservableObject {
                     detail: importedSkinCount == 1 ?
                         "The skin is ready in Assign Skin." :
                         "\(importedSkinCount) skins are ready in Assign Skin."
+                )
+            } else if target == .pairingFile {
+                message = UserMessage(
+                    title: "Pairing File Imported",
+                    detail: "StikJIT will use pairingFile.plist for in-app JIT enablement."
                 )
             }
         } catch {
@@ -723,6 +743,7 @@ final class EmulatorFileStore: ObservableObject {
         try FileManager.default.createDirectory(at: shaderCachesDirectoryURL, withIntermediateDirectories: true, attributes: nil)
         try FileManager.default.createDirectory(at: skinsDirectoryURL, withIntermediateDirectories: true, attributes: nil)
         try FileManager.default.createDirectory(at: cloudSavesDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+        try FileManager.default.createDirectory(at: pairingDirectoryURL, withIntermediateDirectories: true, attributes: nil)
     }
 
     private func scanDirectory(_ url: URL) throws -> [LibraryFile] {
@@ -823,6 +844,25 @@ final class EmulatorFileStore: ObservableObject {
             throw SkinImportError.noSkinsFound
         }
         return importedCount
+    }
+
+    private func importPairingFile(_ urls: [URL]) throws {
+        guard let url = urls.first else {
+            throw PairingFileImportError.emptySelection
+        }
+
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let destination = pairingDirectoryURL.appendingPathComponent("pairingFile.plist")
+        if FileManager.default.fileExists(atPath: destination.path) {
+            try FileManager.default.removeItem(at: destination)
+        }
+        try FileManager.default.copyItem(at: url, to: destination)
     }
 
     private func importSkinFileOrFolder(at url: URL) throws -> Int {
@@ -1265,6 +1305,17 @@ private enum SkinImportError: LocalizedError {
             return "\(name) was copied, but the imported copy could not be loaded."
         case .archiveExtractionFailed(let name):
             return "\(name) could not be opened as a skin archive."
+        }
+    }
+}
+
+private enum PairingFileImportError: LocalizedError {
+    case emptySelection
+
+    var errorDescription: String? {
+        switch self {
+        case .emptySelection:
+            return "No pairing file was selected."
         }
     }
 }

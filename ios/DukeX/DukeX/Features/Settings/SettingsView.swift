@@ -6,6 +6,7 @@ struct SettingsView: View {
     let runtimeState: EmulatorCoreRuntime.RunState
     let autoJITStatus: String?
     let importSystemFiles: () -> Void
+    let importPairingFile: () -> Void
     let importSkins: () -> Void
     @State private var lilyDedicationTapCount = 0
     @State private var lastLilyDedicationTapDate: Date?
@@ -25,12 +26,23 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
 
                 Toggle(isOn: $store.autoJITBeforeLaunchEnabled) {
-                    Label("Auto-enable via StikDebug", systemImage: "arrow.triangle.2.circlepath")
+                    Label("Auto-enable via StikJIT", systemImage: "bolt.badge.automatic")
                 }
 
-                Text("Automatically enables the active JIT path before launching a game.")
+                Text("Uses the imported pairing file to enable JIT in-app before launching.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+
+                AssetRow(
+                    title: "StikJIT Pairing File",
+                    file: store.jitPairingFile,
+                    missingSystemImage: "doc.badge.gearshape",
+                    missingText: "Required"
+                )
+
+                Button(action: importPairingFile) {
+                    Label("Import Pairing File", systemImage: "doc.badge.plus")
+                }
 
                 Toggle(isOn: $store.autoLaunchDashboardOnOpenEnabled) {
                     Label("Auto Launch Dashboard", systemImage: "rectangle.grid.1x2.fill")

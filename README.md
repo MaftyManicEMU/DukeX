@@ -24,10 +24,10 @@ packages a nested desktop Xemu fork inside a Mac Catalyst DukeX experience.
 ## At a Glance
 
 - Latest release: `v1.0.2`.
-- Device target: iPhoneOS arm64, install target iOS 16.0 or later; a native
+- Device target: iPhoneOS arm64, install target iOS 17.4 or later; a native
   macOS DMG is also available through GitHub Releases.
 - Runtime: TCG with version-aware JIT setup; iOS 26 or later uses the
-  StikDebug Universal.js flow.
+  StikJIT Universal.js flow.
 - Graphics: iOS uses the xemu Vulkan renderer through MoltenVK with a native
   Metal presenter and AirPlay display support; macOS uses the bundled desktop
   Xemu presentation path inside the DukeX shell.
@@ -44,7 +44,7 @@ packages a nested desktop Xemu fork inside a Mac Catalyst DukeX experience.
 | --- | --- |
 | Game library | Cover artwork, automatic cover art retrieval for supported titles, game launch, dashboard launch, favorites/title/live/recent sorting, portrait and landscape column options, controller landscape mode on iOS, long-press actions, native launch links, and Insignia live indicators for supported titles. |
 | File management | User-accessible `BIOS`, `ROMs`, `Covers`, `GameConfigs`, and `ShaderCaches` folders through iOS file sharing. |
-| JIT workflow | Optional automatic StikDebug handoff for the iOS 26+ Universal.js JIT flow. |
+| JIT workflow | Optional in-app StikJIT enablement using an imported pairing file. |
 | Display | iOS MoltenVK-backed Metal presenter with portrait and landscape-aware sizing, rendering stability work, expanded AirPlay support, and external-display handling; macOS presentation through the bundled desktop Xemu runtime. |
 | Input | Controller support through iOS GameController APIs plus customizable touch controls through `.manicskin`, `.deltaskin`, and `.gammaskin` layouts. |
 | Online setup | Insignia-focused NAT defaults, editable network settings, XB.Live profile integration, Rich Presence, playtime tracking, friends, messages, community event tracking, and supported cloud sync. |
@@ -76,9 +76,9 @@ experimental software.
 
 - Supported iPhone or iPad hardware for device testing. DukeX requires an
   Apple A14 Bionic or Apple M1 processor or newer.
-- iOS 16.0 or later. iOS 16 through 18 use W^X reprotection after JIT has
-  been enabled for the process. iOS 26 or later requires StikDebug with
-  Universal.js assigned to the DukeX bundle identifier.
+- iOS 17.4 or later. iOS 17 through 18 use W^X reprotection after JIT has
+  been enabled for the process. iOS 26 or later uses StikJIT's Universal.js
+  flow.
 - Legally obtained Xbox flash BIOS, MCPX ROM, and HDD image.
 - Legally obtained XISO game images.
 - Optional Insignia account and registered dashboard for online service testing.

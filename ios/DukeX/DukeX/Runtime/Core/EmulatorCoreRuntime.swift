@@ -154,7 +154,7 @@ final class EmulatorCoreRuntime: ObservableObject {
             }
             GameControllerBootstrap.shared.logSnapshot(reason: "before core launch")
 
-            Task { @MainActor in
+            Task { @MainActor [self] in
                 await XboxPeripheralPermissionPrimer.shared.prepareIfNeeded(
                     cameraEnabled: xboxCameraEnabled,
                     headsetMicEnabled: xboxHeadsetMicEnabled
@@ -215,13 +215,13 @@ final class EmulatorCoreRuntime: ObservableObject {
         }
 
         guard coroutineReserve > 0 else {
-            NSLog("Skipping pre-StikDebug coroutine prime")
+            NSLog("Skipping pre-StikJIT coroutine prime")
             return
         }
 
         _ = try loadEntryPoint()
         let primeCoroutines = try loadPrimeCoroutines()
-        NSLog("Pre-priming Xemu coroutine pool before StikDebug: %u", coroutineReserve)
+        NSLog("Pre-priming Xemu coroutine pool before StikJIT: %u", coroutineReserve)
         primeCoroutines(coroutineReserve)
     }
 
@@ -555,8 +555,6 @@ final class EmulatorCoreRuntime: ObservableObject {
         session: NativeMetalPresenterSession
     ) -> Int32 {
         MetalDiagnostics.configurePerformanceHUD()
-        let bundleIdentifier = Bundle.main.bundleIdentifier?.lowercased() ?? ""
-        let useVulkanSwapchain = bundleIdentifier.hasPrefix("com.mafty.dukex")
         let presentPacingMode = PresentPacingMode.current
         let forceThirtyFPSLock =
             UserDefaults.standard.object(forKey: EmulatorFileStore.forceThirtyFPSLockEnabledKey) as? Bool ?? false
@@ -573,8 +571,8 @@ final class EmulatorCoreRuntime: ObservableObject {
             ("XEMU_IOS_XBOX_CAMERA", xboxCameraEnabled ? "1" : "0"),
             ("XEMU_IOS_XBOX_HEADSET_MIC", xboxHeadsetMicEnabled ? "1" : "0"),
             ("XEMU_IOS_CAMERA_DEBUG", xboxCameraEnabled ? "1" : "0"),
-            ("XEMU_IOS_VK_SWAPCHAIN", useVulkanSwapchain ? "1" : "0"),
-            ("XEMU_IOS_NATIVE_METAL_PRESENTER", useVulkanSwapchain ? "1" : "0"),
+            ("XEMU_IOS_VK_SWAPCHAIN", "1"),
+            ("XEMU_IOS_NATIVE_METAL_PRESENTER", "1"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_SCALE", "1.0"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_ALIGN_X", "0.5"),
             ("XEMU_IOS_PRESENTER_PORTRAIT_ALIGN_Y", "0.5"),
@@ -654,7 +652,7 @@ final class EmulatorCoreRuntime: ObservableObject {
                 .appendingPathComponent("pvideo-frame-latest.bmp")
                 .path ?? "unset"
         )
-        NSLog("XEMU_IOS_VK_SWAPCHAIN=%@", useVulkanSwapchain ? "1" : "0")
+        NSLog("XEMU_IOS_VK_SWAPCHAIN=1")
         NSLog(
             "XEMU_IOS_PRESENT_PACING=%@ force30=%@ mode=%@ displaySync=%@ nominalFPS=%@ presentFPS=%@",
             presentPacingMode.rawValue,
@@ -667,61 +665,58 @@ final class EmulatorCoreRuntime: ObservableObject {
         NSLog("XEMU_IOS_DEPTH_CLAMP=%@", depthClampEnabled ? "1" : "0")
         NSLog("Xemu core argv: %@", arguments.joined(separator: " "))
 
-        let presenterHost = useVulkanSwapchain ? NativeMetalPresenterHost() : nil
+        let presenterHost = NativeMetalPresenterHost()
         var gameplayTouchCallbackRegistered = false
         var inputDiagnosticCallbackRegistered = false
-            if let presenterHost {
-                if let layerPointer = presenterHost.start(
-                    session: session,
-                onExitRequested: {
-                    XboxCameraDiagnosticLog.write("exit requested from native presenter")
-                    setXboxCameraFrameProvider?(nil)
-                    if xboxCameraEnabled {
-                        XboxCameraFrameSource.shared.stop()
-                    }
-                    NotificationCenter.default.post(name: .dukeXReturnToGamesRequested, object: nil)
-                    requestShutdown?()
-                },
-                onRestartRequested: {
-                    guard let requestSystemReset else {
-                        NSLog("qemu_system_reset_request unavailable; in-place restart request ignored")
-                        return false
-                    }
 
-                    NSLog("Requesting in-place Xemu system reset for %@", session.displayTitle)
-                    requestSystemReset(Self.qemuShutdownCauseGuestReset)
-                    return true
+        if let layerPointer = presenterHost.start(
+            session: session,
+            onExitRequested: {
+                XboxCameraDiagnosticLog.write("exit requested from native presenter")
+                setXboxCameraFrameProvider?(nil)
+                if xboxCameraEnabled {
+                    XboxCameraFrameSource.shared.stop()
                 }
-                ) {
-                    setExternalMetalLayer?(layerPointer)
-                    setInputDiagnosticCallback?(dukexInputDiagnosticCallback)
-                    inputDiagnosticCallbackRegistered = setInputDiagnosticCallback != nil
-                    setGameplayTouchCallback?(dukexGameplayTouchCallback)
-                    gameplayTouchCallbackRegistered = setGameplayTouchCallback != nil
-                    NativeMetalDiagnostics.log(
-                        "CORE_BRIDGE",
-                        "externalLayer=\(String(format: "0x%llx", UInt64(UInt(bitPattern: layerPointer)))) gameplayCallbackRegistered=\(gameplayTouchCallbackRegistered ? 1 : 0) inputDiagnosticsRegistered=\(inputDiagnosticCallbackRegistered ? 1 : 0) setExternalAvailable=\(setExternalMetalLayer == nil ? 0 : 1)"
-                    )
-                    NSLog(
-                        "Native CAMetalLayer presenter active: 0x%llx",
-                        UInt64(UInt(bitPattern: layerPointer))
-                )
-            } else {
-                setExternalMetalLayer?(nil)
-                NSLog("Native CAMetalLayer presenter unavailable; falling back to SDL Metal layer")
+                NotificationCenter.default.post(name: .dukeXReturnToGamesRequested, object: nil)
+                requestShutdown?()
+            },
+            onRestartRequested: {
+                guard let requestSystemReset else {
+                    NSLog("qemu_system_reset_request unavailable; in-place restart request ignored")
+                    return false
+                }
+
+                NSLog("Requesting in-place Xemu system reset for %@", session.displayTitle)
+                requestSystemReset(Self.qemuShutdownCauseGuestReset)
+                return true
             }
+        ) {
+            setExternalMetalLayer?(layerPointer)
+            setInputDiagnosticCallback?(dukexInputDiagnosticCallback)
+            inputDiagnosticCallbackRegistered = setInputDiagnosticCallback != nil
+            setGameplayTouchCallback?(dukexGameplayTouchCallback)
+            gameplayTouchCallbackRegistered = setGameplayTouchCallback != nil
+            NativeMetalDiagnostics.log(
+                "CORE_BRIDGE",
+                "externalLayer=\(String(format: "0x%llx", UInt64(UInt(bitPattern: layerPointer)))) gameplayCallbackRegistered=\(gameplayTouchCallbackRegistered ? 1 : 0) inputDiagnosticsRegistered=\(inputDiagnosticCallbackRegistered ? 1 : 0) setExternalAvailable=\(setExternalMetalLayer == nil ? 0 : 1)"
+            )
+            NSLog(
+                "Native CAMetalLayer presenter active: 0x%llx",
+                UInt64(UInt(bitPattern: layerPointer))
+            )
+        } else {
+            setExternalMetalLayer?(nil)
+            NSLog("Native CAMetalLayer presenter unavailable; xemu will create an SDL Metal layer")
         }
         defer {
-            if useVulkanSwapchain {
-                if gameplayTouchCallbackRegistered {
-                    setGameplayTouchCallback?(nil)
-                }
-                if inputDiagnosticCallbackRegistered {
-                    setInputDiagnosticCallback?(nil)
-                }
-                setExternalMetalLayer?(nil)
-                presenterHost?.stop()
+            if gameplayTouchCallbackRegistered {
+                setGameplayTouchCallback?(nil)
             }
+            if inputDiagnosticCallbackRegistered {
+                setInputDiagnosticCallback?(nil)
+            }
+            setExternalMetalLayer?(nil)
+            presenterHost.stop()
         }
 
         let argv = arguments.map { strdup($0) } + [nil]

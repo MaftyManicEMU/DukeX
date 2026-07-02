@@ -1,0 +1,39 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.1.2 effective-5.10 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+// swift-module-flags: -target arm64-apple-ios17.4 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name StikJIT
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -interface-compiler-version 6.1.2
+import Foundation
+import JavaScriptCore
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public enum StikJIT {
+  public enum Script : Swift.Sendable {
+    case universal
+    case legacy
+    public static func == (a: StikJIT.Script, b: StikJIT.Script) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Configuration : Swift.Sendable {
+    public var deviceAddress: Swift.String
+    public var rsdPort: Swift.UInt16
+    public init(deviceAddress: Swift.String = "10.7.0.1", rsdPort: Swift.UInt16 = 49152)
+    public static let `default`: StikJIT.Configuration
+  }
+  public static func enableJIT(targetPID: Swift.Int32, pairingFile: Foundation.URL, configuration: StikJIT.Configuration = .default, script: StikJIT.Script = .universal, progress: @escaping (Swift.String) -> Swift.Void = { _ in }) throws
+}
+public enum StikJITError : Swift.Error, Foundation.LocalizedError {
+  case pairingFile(Swift.String)
+  case scriptUnavailable
+  case debugProxyUnavailable
+  case device(code: Swift.Int32, subCode: Swift.Int32, message: Swift.String)
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+extension StikJIT.Script : Swift.Equatable {}
+extension StikJIT.Script : Swift.Hashable {}
