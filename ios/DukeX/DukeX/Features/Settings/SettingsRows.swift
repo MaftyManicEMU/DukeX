@@ -5,12 +5,20 @@ struct AssetRow: View {
     let file: LibraryFile?
     let missingSystemImage: String
     let missingText: String
+    let showsDisclosureIndicator: Bool
 
-    init(title: String, file: LibraryFile?, missingSystemImage: String, missingText: String = "Missing") {
+    init(
+        title: String,
+        file: LibraryFile?,
+        missingSystemImage: String,
+        missingText: String = "Missing",
+        showsDisclosureIndicator: Bool = false
+    ) {
         self.title = title
         self.file = file
         self.missingSystemImage = missingSystemImage
         self.missingText = missingText
+        self.showsDisclosureIndicator = showsDisclosureIndicator
     }
 
     var body: some View {
@@ -34,8 +42,49 @@ struct AssetRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            if showsDisclosureIndicator {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
         }
         .frame(minHeight: 44)
+    }
+}
+
+struct ImportAssetRow: View {
+    let title: String
+    let file: LibraryFile?
+    let missingSystemImage: String
+    let missingText: String
+    let action: () -> Void
+
+    init(
+        title: String,
+        file: LibraryFile?,
+        missingSystemImage: String,
+        missingText: String = "Missing",
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.file = file
+        self.missingSystemImage = missingSystemImage
+        self.missingText = missingText
+        self.action = action
+    }
+
+    var body: some View {
+        Button(action: action) {
+            AssetRow(
+                title: title,
+                file: file,
+                missingSystemImage: missingSystemImage,
+                missingText: missingText,
+                showsDisclosureIndicator: true
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 

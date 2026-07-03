@@ -3,6 +3,7 @@ import UIKit
 
 struct SkinAssignmentView: View {
     @ObservedObject var store: EmulatorFileStore
+    let importSkins: () -> Void
     @Environment(\.dukeXTheme) private var theme
     @State private var selectedOrientation: ManicSkinPreviewOrientation = .portrait
     @State private var previewRequest: SkinPreviewRequest?
@@ -14,35 +15,47 @@ struct SkinAssignmentView: View {
                 VStack(spacing: 16) {
                     SkinOrientationPicker(selection: $selectedOrientation)
 
-                    if store.skins.isEmpty {
-                        SkinGridEmptyState()
-                    } else {
-                        let activeColumnCount = skinColumnCount(for: geometry.size)
-                        LazyVGrid(
-                            columns: GameLibraryGridMetrics.columns(for: activeColumnCount),
-                            alignment: .center,
-                            spacing: GameLibraryGridMetrics.spacing(for: activeColumnCount) + 6
-                        ) {
-                            ForEach(store.skins) { skin in
-                                SkinPreviewTile(
-                                    item: skin,
-                                    orientation: selectedOrientation,
-                                    isSelected: skin.id == store.selectedSkin(for: selectedOrientation)?.id,
-                                    assign: {
-                                        store.setSelectedSkin(skin, for: selectedOrientation)
-                                    },
-                                    preview: {
-                                        previewRequest = SkinPreviewRequest(
-                                            item: skin,
-                                            orientation: selectedOrientation
-                                        )
-                                    },
-                                    requestRemoveSkin: {
-                                        removalConfirmationTarget = skin
-                                    }
-                                )
-                            }
+                    let activeColumnCount = skinColumnCount(for: geometry.size)
+                    let activeGridWidth = max(1, geometry.size.width - 40)
+                    let activeTileWidth = GameLibraryGridMetrics.tileWidth(
+                        for: activeColumnCount,
+                        availableWidth: activeGridWidth
+                    )
+                    let thumbnailWidth = max(1, activeTileWidth - 20)
+                    LazyVGrid(
+                        columns: GameLibraryGridMetrics.columns(
+                            for: activeColumnCount,
+                            availableWidth: activeGridWidth
+                        ),
+                        alignment: .center,
+                        spacing: GameLibraryGridMetrics.spacing(for: activeColumnCount) + 6
+                    ) {
+                        ForEach(store.skins) { skin in
+                            SkinPreviewTile(
+                                item: skin,
+                                orientation: selectedOrientation,
+                                isSelected: skin.id == store.selectedSkin(for: selectedOrientation)?.id,
+                                assign: {
+                                    store.setSelectedSkin(skin, for: selectedOrientation)
+                                },
+                                preview: {
+                                    previewRequest = SkinPreviewRequest(
+                                        item: skin,
+                                        orientation: selectedOrientation
+                                    )
+                                },
+                                requestRemoveSkin: {
+                                    removalConfirmationTarget = skin
+                                }
+                            )
                         }
+
+                        ImportSkinTile(
+                            orientation: selectedOrientation,
+                            referenceItem: store.skins.first,
+                            thumbnailWidth: thumbnailWidth,
+                            importSkins: importSkins
+                        )
                     }
                 }
                 .padding(.horizontal, 20)
@@ -147,23 +160,74 @@ private struct SkinOrientationPicker: View {
     }
 }
 
-private struct SkinGridEmptyState: View {
+private struct ImportSkinTile: View {
     @Environment(\.dukeXTheme) private var theme
 
+    let orientation: ManicSkinPreviewOrientation
+    let referenceItem: ManicSkinLibraryItem?
+    let thumbnailWidth: CGFloat
+    let importSkins: () -> Void
+
     var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "gamecontroller")
-                .font(.system(size: 34, weight: .regular))
-            Text("No skins installed")
-                .font(.subheadline.weight(.semibold))
+        Button(action: importSkins) {
+            VStack(spacing: 6) {
+                thumbnail
+
+                Color.clear
+                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .top)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(10)
+            .frame(maxWidth: .infinity)
+            .background(theme.surfaceColor,
+                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(theme.borderColor, lineWidth: 1)
+            }
+            .contentShape(Rectangle())
         }
-        .foregroundStyle(.secondary)
-        .frame(maxWidth: .infinity, minHeight: 160)
-        .background(theme.surfaceColor, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .buttonStyle(.plain)
+        .accessibilityLabel("Import Skin")
+    }
+
+    private var thumbnail: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.black.opacity(0.92))
+
+            VStack(spacing: 8) {
+                Image(systemName: "plus.circle")
+                    .font(.system(size: 36, weight: .regular))
+                Text("Import Skin")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 10)
+        }
+        .frame(width: thumbnailWidth, height: thumbnailHeight)
+        .frame(maxWidth: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(theme.borderColor, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
         }
+    }
+
+    private var thumbnailHeight: CGFloat {
+        thumbnailWidth / thumbnailAspectRatio
+    }
+
+    private var thumbnailAspectRatio: CGFloat {
+        let nativeAspectRatio = referenceItem?.makeSkin()?.previewAspectRatio(for: orientation)
+            ?? orientation.fallbackAspectRatio
+        guard nativeAspectRatio > 0 else {
+            return 0.70
+        }
+
+        let displayedAspectRatio = orientation == .landscape ? 1 / nativeAspectRatio : nativeAspectRatio
+        return min(0.70, displayedAspectRatio)
     }
 }
 

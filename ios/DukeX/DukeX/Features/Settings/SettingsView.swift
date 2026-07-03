@@ -16,47 +16,6 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section("Runtime") {
-                Toggle(isOn: $store.universalJITEnabled) {
-                    Label("Universal.js JIT", systemImage: "bolt.horizontal.circle")
-                }
-
-                Text("Required on iOS 26 or later. iOS 16 through 18 use W^X reprotection after JIT is enabled.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-
-                Toggle(isOn: $store.autoJITBeforeLaunchEnabled) {
-                    Label("Auto-enable via StikJIT", systemImage: "bolt.badge.automatic")
-                }
-
-                Text("Uses the imported pairing file to enable JIT in-app before launching.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-
-                AssetRow(
-                    title: "StikJIT Pairing File",
-                    file: store.jitPairingFile,
-                    missingSystemImage: "doc.badge.gearshape",
-                    missingText: "Required"
-                )
-
-                Button(action: importPairingFile) {
-                    Label("Import Pairing File", systemImage: "doc.badge.plus")
-                }
-
-                Toggle(isOn: $store.autoLaunchDashboardOnOpenEnabled) {
-                    Label("Auto Launch Dashboard", systemImage: "rectangle.grid.1x2.fill")
-                }
-
-                Text("Recommended only if you use XBMC or another replacement dashboard.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-
-                CoreStatusRow(state: runtimeState)
-                AutoJITStatusRow(status: autoJITStatus)
-            }
-            .dukeXThemedListRowBackground()
-
             Section("Display") {
                 Toggle(isOn: $store.metalHUDEnabled) {
                     Label("Metal HUD", systemImage: "gauge.with.dots.needle.67percent")
@@ -152,14 +111,10 @@ struct SettingsView: View {
                 }
 
                 NavigationLink {
-                    SkinAssignmentView(store: store)
+                    SkinAssignmentView(store: store, importSkins: importSkins)
                 } label: {
                     SkinAssignmentSummaryRow(selectedSkinName: store.selectedSkinSummaryText,
                                              skinCount: store.skins.count)
-                }
-
-                Button(action: importSkins) {
-                    Label("Import Skin", systemImage: "tray.and.arrow.down")
                 }
             }
             .dukeXThemedListRowBackground()
@@ -270,14 +225,38 @@ struct SettingsView: View {
             .dukeXThemedListRowBackground()
 
             Section("System Files") {
-                AssetRow(title: "Flash BIOS", file: store.bios, missingSystemImage: "memorychip")
-                AssetRow(title: "MCPX", file: store.mcpx, missingSystemImage: "lock.rectangle")
-                AssetRow(title: "EEPROM", file: store.eeprom, missingSystemImage: "key", missingText: "Generated automatically")
-                AssetRow(title: "HDD", file: store.hdd, missingSystemImage: "internaldrive")
-
-                Button(action: importSystemFiles) {
-                    Label("Import System Files", systemImage: "tray.and.arrow.down")
-                }
+                ImportAssetRow(
+                    title: "Flash BIOS",
+                    file: store.bios,
+                    missingSystemImage: "memorychip",
+                    action: importSystemFiles
+                )
+                ImportAssetRow(
+                    title: "MCPX",
+                    file: store.mcpx,
+                    missingSystemImage: "lock.rectangle",
+                    action: importSystemFiles
+                )
+                ImportAssetRow(
+                    title: "EEPROM",
+                    file: store.eeprom,
+                    missingSystemImage: "key",
+                    missingText: "Generated automatically",
+                    action: importSystemFiles
+                )
+                ImportAssetRow(
+                    title: "HDD",
+                    file: store.hdd,
+                    missingSystemImage: "internaldrive",
+                    action: importSystemFiles
+                )
+                ImportAssetRow(
+                    title: "Pairing File",
+                    file: store.jitPairingFile,
+                    missingSystemImage: "doc.badge.gearshape",
+                    missingText: "Required for Auto JIT",
+                    action: importPairingFile
+                )
             }
             .dukeXThemedListRowBackground()
 
