@@ -77,14 +77,14 @@ struct GamesLibraryView: View {
                 updateControllerLandscapeMode(active: controllerLandscapeActive, displayedGames: displayedGames)
             }
             .onChange(of: runtimeState.canLaunch) { _ in
-                updateControllerInputHandlers(active: controllerLandscapeActive && !store.games.isEmpty)
+                updateControllerInputHandlers(active: controllerLandscapeActive)
             }
             .onReceive(statusRefreshTimer) { date in
                 statusDate = date
                 updateDeviceBatteryStatus()
             }
             .onReceive(controllerInputPollTimer) { _ in
-                pollControllerLandscapeInput(active: controllerLandscapeActive && !store.games.isEmpty)
+                pollControllerLandscapeInput(active: controllerLandscapeActive)
             }
         }
         .background {
@@ -331,7 +331,7 @@ struct GamesLibraryView: View {
         }
 
         normalizeControllerLandscapeSelection(displayedGames: displayedGames)
-        updateControllerInputHandlers(active: !store.games.isEmpty)
+        updateControllerInputHandlers(active: true)
     }
 
     private func normalizeControllerLandscapeSelection(displayedGames: [LibraryFile]) {
@@ -419,6 +419,11 @@ struct GamesLibraryView: View {
             return
         }
 
+        if case .launchDashboard = action {
+            launchControllerLandscapeDashboard()
+            return
+        }
+
         guard !games.isEmpty else {
             logControllerLandscapeInput("ignored \(action.logName): no games")
             return
@@ -436,7 +441,7 @@ struct GamesLibraryView: View {
             moveControllerLandscapePage(delta: 1, displayedGames: games)
         case .launchSelected:
             launchControllerLandscapeSelection(displayedGames: games)
-        case .cycleSort:
+        case .cycleSort, .launchDashboard:
             break
         }
     }
@@ -480,6 +485,17 @@ struct GamesLibraryView: View {
         launchGame(selectedGame)
     }
 
+    private func launchControllerLandscapeDashboard() {
+        guard store.systemFilesReady, runtimeState.canLaunch else {
+            logControllerLandscapeInput("ignored launchDashboard: blocked")
+            return
+        }
+
+        logControllerLandscapeInput("action launchDashboard")
+        clearControllerInputHandlers()
+        launchDashboard()
+    }
+
     private func cycleControllerLandscapeSortMode() {
         let modes = GameLibrarySortMode.allCases
         guard let currentIndex = modes.firstIndex(of: sortMode) else {
@@ -519,7 +535,7 @@ struct GamesLibraryView: View {
     }
 
     private func clearControllerInputHandlers() {
-        guard let controller = controllerInputController else {
+        guard controllerInputController != nil else {
             controllerPolledInputs.removeAll()
             return
         }
@@ -586,6 +602,9 @@ struct GamesLibraryView: View {
             }
             if gamepad.buttonX.isPressed || gamepad.buttonX.value >= 0.5 {
                 inputs.insert(.buttonX)
+            }
+            if gamepad.buttonY.isPressed || gamepad.buttonY.value >= 0.5 {
+                inputs.insert(.buttonY)
             }
         }
 
@@ -750,6 +769,7 @@ private enum ControllerLandscapeAction {
     case nextPage
     case launchSelected
     case cycleSort
+    case launchDashboard
 
     var logName: String {
         switch self {
@@ -765,6 +785,8 @@ private enum ControllerLandscapeAction {
             return "launchSelected"
         case .cycleSort:
             return "cycleSort"
+        case .launchDashboard:
+            return "launchDashboard"
         }
     }
 }
@@ -778,9 +800,11 @@ private enum ControllerLandscapePolledInput: Hashable {
     case rightTrigger
     case buttonA
     case buttonX
+    case buttonY
 
     static let actionOrder: [ControllerLandscapePolledInput] = [
         .buttonX,
+        .buttonY,
         .leftTrigger,
         .rightTrigger,
         .dpadLeft,
@@ -804,6 +828,8 @@ private enum ControllerLandscapePolledInput: Hashable {
             return .launchSelected
         case .buttonX:
             return .cycleSort
+        case .buttonY:
+            return .launchDashboard
         }
     }
 
@@ -825,6 +851,8 @@ private enum ControllerLandscapePolledInput: Hashable {
             return "buttonA"
         case .buttonX:
             return "buttonX"
+        case .buttonY:
+            return "buttonY"
         }
     }
 }

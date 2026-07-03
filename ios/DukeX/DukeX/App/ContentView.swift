@@ -1120,15 +1120,23 @@ private struct ControllerLandscapeFooterHelpers: View {
     }
 
     private var sortHelper: some View {
-        HStack(spacing: 6) {
-            ControllerLandscapeButtonGlyph("X")
-            Text("Sort")
-                .font(.system(size: 12, weight: .semibold))
-            Text("|")
-                .font(.system(size: 12, weight: .regular))
-                .foregroundStyle(.secondary)
-            Text(sortTitle)
-                .font(.system(size: 12, weight: .regular))
+        HStack(spacing: 12) {
+            HStack(spacing: 6) {
+                ControllerLandscapeButtonGlyph("X")
+                Text("Sort")
+                    .font(.system(size: 12, weight: .semibold))
+                Text("|")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundStyle(.secondary)
+                Text(sortTitle)
+                    .font(.system(size: 12, weight: .regular))
+            }
+
+            HStack(spacing: 6) {
+                ControllerLandscapeButtonGlyph("Y")
+                Text("Dashboard")
+                    .font(.system(size: 12, weight: .semibold))
+            }
         }
         .lineLimit(1)
         .minimumScaleFactor(0.8)

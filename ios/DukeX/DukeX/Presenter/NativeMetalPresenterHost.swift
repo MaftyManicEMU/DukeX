@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import GameController
 import ObjectiveC
 import QuartzCore
 import UIKit
@@ -41,6 +42,8 @@ final class NativeMetalPresenterHost {
     private var manicSkinControlsView: ManicSkinTouchControlsView?
     private var exitOverlayView: GameplayExitOverlayView?
     private var exitMenuTapGesture: UITapGestureRecognizer?
+    private var controllerInputPollTimer: Timer?
+    private var controllerPolledInputs: Set<NativePresenterControllerInput> = []
     private var touchProbeGesture: NativeMetalTouchProbeGestureRecognizer?
     private var presenterLayoutConstraints: [NSLayoutConstraint] = []
     private var manicSkinLayoutConstraints: [NSLayoutConstraint] = []
@@ -195,6 +198,7 @@ final class NativeMetalPresenterHost {
         manicSkinControlsView?.onMenuRequested = { [weak exitOverlayView] in
             exitOverlayView?.show()
         }
+        startControllerInputPolling()
 
         let attachedWindow: UIWindow
         if Self.usesEmbeddedApplicationWindowPresenter,
@@ -601,6 +605,187 @@ final class NativeMetalPresenterHost {
 
         exitMenuTapGesture.view?.removeGestureRecognizer(exitMenuTapGesture)
         view?.addGestureRecognizer(exitMenuTapGesture)
+    }
+
+    private func startControllerInputPolling() {
+        guard controllerInputPollTimer == nil else {
+            return
+        }
+
+        let timer = Timer(timeInterval: 0.08, repeats: true) { [weak self] _ in
+            self?.pollControllerInput()
+        }
+        controllerInputPollTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+
+    private func pollControllerInput() {
+        guard let exitOverlayView else {
+            controllerPolledInputs.removeAll()
+            return
+        }
+
+        let controllers = GCController.controllers().filter(Self.isPhysicalGameControllerForPresenter)
+        controllers.forEach(configureRecordButtonSystemGestures)
+
+        let currentInputs = Set(controllers.flatMap(controllerInputsPressed))
+        let newlyPressedInputs = currentInputs.subtracting(controllerPolledInputs)
+        guard !newlyPressedInputs.isEmpty else {
+            controllerPolledInputs = currentInputs
+            return
+        }
+
+        for input in NativePresenterControllerInput.actionOrder where newlyPressedInputs.contains(input) {
+            handleControllerInput(input, exitOverlayView: exitOverlayView)
+        }
+
+        controllerPolledInputs = currentInputs
+    }
+
+    private func handleControllerInput(
+        _ input: NativePresenterControllerInput,
+        exitOverlayView: GameplayExitOverlayView
+    ) {
+        switch input {
+        case .exitMenu:
+            NativeMetalDiagnostics.log("EXIT_CONTROLLER", "input=exitMenu")
+            exitOverlayView.show()
+        case .select:
+            if exitOverlayView.isMenuVisible {
+                NativeMetalDiagnostics.log("EXIT_CONTROLLER", "input=select")
+                exitOverlayView.handleControllerInput(.select)
+            }
+        case .cancel:
+            if exitOverlayView.isMenuVisible {
+                NativeMetalDiagnostics.log("EXIT_CONTROLLER", "input=cancel")
+                exitOverlayView.handleControllerInput(.cancel)
+            }
+        case .up:
+            if exitOverlayView.isMenuVisible {
+                exitOverlayView.handleControllerInput(.up)
+            }
+        case .down:
+            if exitOverlayView.isMenuVisible {
+                exitOverlayView.handleControllerInput(.down)
+            }
+        case .left:
+            if exitOverlayView.isMenuVisible {
+                exitOverlayView.handleControllerInput(.left)
+            }
+        case .right:
+            if exitOverlayView.isMenuVisible {
+                exitOverlayView.handleControllerInput(.right)
+            }
+        }
+    }
+
+    private func controllerInputsPressed(on controller: GCController) -> Set<NativePresenterControllerInput> {
+        var inputs: Set<NativePresenterControllerInput> = []
+
+        if let gamepad = controller.extendedGamepad {
+            if gamepad.buttonA.isPressed || gamepad.buttonA.value >= 0.5 {
+                inputs.insert(.select)
+            }
+            if gamepad.buttonB.isPressed || gamepad.buttonB.value >= 0.5 {
+                inputs.insert(.cancel)
+            }
+            if gamepad.dpad.up.isPressed || gamepad.leftThumbstick.yAxis.value >= 0.65 {
+                inputs.insert(.up)
+            }
+            if gamepad.dpad.down.isPressed || gamepad.leftThumbstick.yAxis.value <= -0.65 {
+                inputs.insert(.down)
+            }
+            if gamepad.dpad.left.isPressed || gamepad.leftThumbstick.xAxis.value <= -0.65 {
+                inputs.insert(.left)
+            }
+            if gamepad.dpad.right.isPressed || gamepad.leftThumbstick.xAxis.value >= 0.65 {
+                inputs.insert(.right)
+            }
+        }
+
+        if let microGamepad = controller.microGamepad {
+            if microGamepad.buttonA.isPressed || microGamepad.buttonA.value >= 0.5 {
+                inputs.insert(.select)
+            }
+            if microGamepad.buttonX.isPressed || microGamepad.buttonX.value >= 0.5 {
+                inputs.insert(.cancel)
+            }
+            if microGamepad.dpad.up.isPressed {
+                inputs.insert(.up)
+            }
+            if microGamepad.dpad.down.isPressed {
+                inputs.insert(.down)
+            }
+            if microGamepad.dpad.left.isPressed {
+                inputs.insert(.left)
+            }
+            if microGamepad.dpad.right.isPressed {
+                inputs.insert(.right)
+            }
+        }
+
+        if recordButtonPressed(on: controller) {
+            inputs.insert(.exitMenu)
+        }
+
+        return inputs
+    }
+
+    private func recordButtonPressed(on controller: GCController) -> Bool {
+        if let button = controller.physicalInputProfile.buttons[GCInputButtonShare],
+           Self.isPressed(button) {
+            return true
+        }
+
+        return controller.physicalInputProfile.buttons.contains { name, button in
+            Self.isRecordButtonCandidate(name: name, button: button) && Self.isPressed(button)
+        }
+    }
+
+    private func configureRecordButtonSystemGestures(on controller: GCController) {
+        if let button = controller.physicalInputProfile.buttons[GCInputButtonShare] {
+            button.preferredSystemGestureState = .disabled
+        }
+
+        for (name, button) in controller.physicalInputProfile.buttons where Self.isRecordButtonCandidate(name: name, button: button) {
+            button.preferredSystemGestureState = .disabled
+        }
+    }
+
+    private static func isRecordButtonCandidate(name: String, button: GCControllerButtonInput) -> Bool {
+        let descriptors = [
+            name,
+            button.localizedName,
+            button.unmappedLocalizedName,
+            button.sfSymbolsName,
+            button.unmappedSfSymbolsName
+        ]
+        .compactMap { $0?.lowercased() }
+        .joined(separator: " ")
+
+        return descriptors.contains("share") ||
+            descriptors.contains("record") ||
+            descriptors.contains("capture")
+    }
+
+    private static func isPressed(_ button: GCControllerButtonInput?) -> Bool {
+        guard let button else {
+            return false
+        }
+        return button.isPressed || button.value >= 0.5
+    }
+
+    private static func isPhysicalGameControllerForPresenter(_ controller: GCController) -> Bool {
+        guard !isVirtualControllerForPresenter(controller) else {
+            return false
+        }
+        return controller.extendedGamepad != nil || controller.microGamepad != nil
+    }
+
+    private static func isVirtualControllerForPresenter(_ controller: GCController) -> Bool {
+        let vendorName = controller.vendorName ?? ""
+        return vendorName.localizedCaseInsensitiveContains("virtual") ||
+            controller.productCategory.localizedCaseInsensitiveContains("virtual")
     }
 
     private func attachPresenterViewToDeviceRoot(reason: String) {
@@ -2845,6 +3030,9 @@ final class NativeMetalPresenterHost {
     func stop() {
         geometryDisplayLink?.invalidate()
         geometryDisplayLink = nil
+        controllerInputPollTimer?.invalidate()
+        controllerInputPollTimer = nil
+        controllerPolledInputs.removeAll()
         removeExternalScreenObservers()
         runLoopTimers.forEach { $0.invalidate() }
         runLoopTimers.removeAll()
@@ -3194,6 +3382,26 @@ private final class NativeMetalPresenterRootView: UIView {
         }
         super.touchesCancelled(touches, with: event)
     }
+}
+
+private enum NativePresenterControllerInput: Hashable {
+    case exitMenu
+    case select
+    case cancel
+    case up
+    case down
+    case left
+    case right
+
+    static let actionOrder: [NativePresenterControllerInput] = [
+        .exitMenu,
+        .cancel,
+        .select,
+        .up,
+        .down,
+        .left,
+        .right
+    ]
 }
 
 private final class NativeMetalPresenterWindow: UIWindow {
