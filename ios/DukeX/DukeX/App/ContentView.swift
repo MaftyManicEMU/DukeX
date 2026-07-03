@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import UniformTypeIdentifiers
 import UIKit
 import PhotosUI
@@ -19,7 +20,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var store: EmulatorFileStore
     @StateObject private var runtime = EmulatorCoreRuntime()
-    @StateObject private var autoJIT = StikDebugAutoJITCoordinator()
+    @StateObject private var autoJIT = StikJITAutoJITCoordinator()
     @StateObject private var profileStore = InsigniaProfileStore()
     @StateObject private var socialStore = XBLiveSocialStore()
     @StateObject private var emulatorPresence = XBLiveEmulatorPresenceCoordinator()
@@ -139,6 +140,7 @@ struct ContentView: View {
                         runtimeState: runtime.state,
                         autoJITStatus: autoJIT.status,
                         importSystemFiles: { importTarget = .systemFiles },
+                        importPairingFile: { importTarget = .pairingFile },
                         importSkins: { importTarget = .skins }
                     )
                         .navigationTitle("DukeX")
@@ -262,9 +264,6 @@ struct ContentView: View {
             .onAppear {
                 lastObservedRuntimeState = runtime.state
                 refreshControllerStatus()
-                if !environmentRequestsAutoLaunch {
-                    resumePendingAutoJITLaunchIfNeeded()
-                }
             }
             .task {
                 profileStore.refresh()
@@ -275,19 +274,13 @@ struct ContentView: View {
                 if environmentRequestsAutoLaunch && !autoLaunchAttempted {
                     autoJIT.clearPendingForFreshAutomaticLaunch()
                 }
-                if resumePendingAutoJITLaunchIfNeeded() {
-                    return
-                }
                 autoLaunchIfRequested()
             }
             .onChange(of: scenePhase) { newPhase in
                 switch newPhase {
                 case .active:
-                    autoJIT.markAppReturnedFromStikDebugIfPending()
-                    resumePendingAutoJITLaunchIfNeeded()
                     startXBLiveRealtimeStatusRefreshIfNeeded()
                 case .inactive, .background:
-                    autoJIT.markAppLeftForStikDebugIfPending()
                     stopXBLiveRealtimeStatusRefresh()
                 @unknown default:
                     break
@@ -771,11 +764,45 @@ struct ContentView: View {
             return
         }
 
-        try runtime.prepareBeforeAutoJIT()
-        autoJIT.requestJIT(for: target, scriptName: plan.jitMode.stikDebugScriptName) { message in
-            store.message = message
+        guard let pairingFile = store.jitPairingFileURL else {
+            throw LaunchPlanError.missing("StikJIT pairing file")
         }
-        scheduleAutoJITFallbackIfNeeded()
+
+        do {
+            try autoJIT.requestJIT(
+                for: target,
+                pairingFile: pairingFile,
+                jitMode: plan.jitMode
+            ) {
+                launchRuntimeAfterAutoJITAttach(plan, target: target)
+            }
+        } catch {
+            if target == .game {
+                emulatorPresence.stop(reason: "StikJIT failed")
+            }
+            activeRuntimeWasGame = false
+            store.message = UserMessage(
+                title: "Auto JIT Failed",
+                detail: error.localizedDescription
+            )
+        }
+    }
+
+    private func launchRuntimeAfterAutoJITAttach(_ plan: XemuLaunchPlan, target: AutoJITLaunchTarget) {
+        do {
+            try runtime.prepareBeforeAutoJIT()
+            launchRuntime(plan, target: target)
+        } catch {
+            autoJIT.cancelActiveJIT(message: error.localizedDescription)
+            if target == .game {
+                emulatorPresence.stop(reason: "StikJIT failed")
+            }
+            activeRuntimeWasGame = false
+            store.message = UserMessage(
+                title: "Auto JIT Failed",
+                detail: error.localizedDescription
+            )
+        }
     }
 
     private func handleRuntimeStateChange(
@@ -1045,31 +1072,6 @@ struct ContentView: View {
         }
     }
 
-    @discardableResult
-    private func resumePendingAutoJITLaunchIfNeeded() -> Bool {
-        guard autoJIT.hasPendingLaunch else {
-            return false
-        }
-        guard let target = autoJIT.consumePendingLaunchIfReady() else {
-            if autoJIT.hasObservedStikDebugTrip {
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1_500_000_000)
-                    if UIApplication.shared.applicationState == .active {
-                        resumePendingAutoJITLaunchIfNeeded()
-                    }
-                }
-            }
-            scheduleAutoJITFallbackIfNeeded()
-            return true
-        }
-
-        Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 750_000_000)
-            launchWithoutAutoJIT(target)
-        }
-        return true
-    }
-
     private func autoLaunchIfRequested() {
         guard !autoLaunchAttempted else {
             return
@@ -1095,19 +1097,6 @@ struct ContentView: View {
         } else if shouldAutoLaunchDashboard {
             autoJIT.noteAutomaticDashboardLaunchAttempt()
             launchDashboard()
-        }
-    }
-
-    private func scheduleAutoJITFallbackIfNeeded() {
-        Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 14_000_000_000)
-            guard autoJIT.hasPendingLaunch,
-                  UIApplication.shared.applicationState == .active,
-                  runtime.state.canLaunch else {
-                return
-            }
-            autoJIT.forcePendingLaunchReady()
-            resumePendingAutoJITLaunchIfNeeded()
         }
     }
 }

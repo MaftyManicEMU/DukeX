@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6810450B2FF58646004E2B7E /* StikJIT.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 681045042FF58646004E2B7E /* StikJIT.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FE0000000000000000000001 /* StikJITExtensionLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0000000000000000000011 /* StikJITExtensionLauncher.m */; };
 		A10000000000000000000001 /* DukeXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* DukeXApp.swift */; };
 		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* ContentView.swift */; };
 		A10000000000000000000003 /* EmulatorFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* EmulatorFileStore.swift */; };
@@ -14,6 +16,7 @@
 		A10000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* Assets.xcassets */; };
 		A10000000000000000000006 /* EmulatorCoreRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000018 /* EmulatorCoreRuntime.swift */; };
 		A10000000000000000000007 /* EarlyMetalDiagnostics.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000019 /* EarlyMetalDiagnostics.m */; };
+		AA0000000000000000000001 /* StikJIT.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000010 /* StikJIT.xcframework */; platformFilter = ios; };
 		B10000000000000000000001 /* GamesLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* GamesLibraryView.swift */; };
 		B10000000000000000000002 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* ProfileView.swift */; };
 		B10000000000000000000003 /* DocumentImportPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* DocumentImportPicker.swift */; };
@@ -28,7 +31,6 @@
 		C10000000000000000000001 /* AppNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000011 /* AppNotifications.swift */; };
 		C10000000000000000000002 /* GameControllerBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000012 /* GameControllerBootstrap.swift */; };
 		C10000000000000000000003 /* MetalDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000013 /* MetalDiagnostics.swift */; };
-		C10000000000000000000021 /* ControllerBatteryMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000022 /* ControllerBatteryMonitor.swift */; };
 		C10000000000000000000004 /* GameCoverTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000014 /* GameCoverTile.swift */; };
 		C10000000000000000000005 /* GamesEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000015 /* GamesEmptyState.swift */; };
 		C10000000000000000000006 /* ProfileLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000016 /* ProfileLoginView.swift */; };
@@ -42,6 +44,7 @@
 		C1000000000000000000000E /* StatsHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001E /* StatsHUDView.swift */; };
 		C1000000000000000000000F /* NativeMetalPresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000000000000000000001F /* NativeMetalPresenterView.swift */; };
 		C10000000000000000000010 /* LayerConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000020 /* LayerConfigurators.swift */; };
+		C10000000000000000000021 /* ControllerBatteryMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000022 /* ControllerBatteryMonitor.swift */; };
 		D20000000000000000000001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000011 /* AppTheme.swift */; };
 		D20000000000000000000002 /* NostalgicDotBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000012 /* NostalgicDotBackgroundView.swift */; };
 		E10000000000000000000001 /* LiveStatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000011 /* LiveStatusBadge.swift */; };
@@ -70,7 +73,32 @@
 		K70000000000000000000001 /* ProfileActivityFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = K70000000000000000000011 /* ProfileActivityFeedView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		681045092FF58646004E2B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000060 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 681045032FF58646004E2B7E;
+			remoteInfo = StikJIT;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6810450C2FF58646004E2B7E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6810450B2FF58646004E2B7E /* StikJIT.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		681045042FF58646004E2B7E /* StikJIT.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StikJIT.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000010 /* DukeX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DukeX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000011 /* DukeXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DukeXApp.swift; sourceTree = "<group>"; };
 		A10000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +109,12 @@
 		A10000000000000000000017 /* DukeX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DukeX.entitlements; sourceTree = "<group>"; };
 		A10000000000000000000018 /* EmulatorCoreRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorCoreRuntime.swift; sourceTree = "<group>"; };
 		A10000000000000000000019 /* EarlyMetalDiagnostics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EarlyMetalDiagnostics.m; sourceTree = "<group>"; };
+		FE0000000000000000000011 /* StikJITExtensionLauncher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StikJITExtensionLauncher.m; sourceTree = "<group>"; };
+		FE0000000000000000000012 /* StikJITExtensionLauncher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StikJITExtensionLauncher.h; sourceTree = "<group>"; };
+		AA0000000000000000000010 /* StikJIT.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcframework; path = StikJIT.xcframework; sourceTree = "<group>"; };
+		FE0000000000000000000021 /* DukeXShared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DukeXShared.xcconfig; sourceTree = "<group>"; };
+		FE0000000000000000000022 /* DukeXApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DukeXApp.xcconfig; sourceTree = "<group>"; };
+		FE0000000000000000000023 /* StikJIT.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StikJIT.xcconfig; sourceTree = "<group>"; };
 		B10000000000000000000011 /* GamesLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesLibraryView.swift; sourceTree = "<group>"; };
 		B10000000000000000000012 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		B10000000000000000000013 /* DocumentImportPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentImportPicker.swift; sourceTree = "<group>"; };
@@ -95,7 +129,6 @@
 		C10000000000000000000011 /* AppNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotifications.swift; sourceTree = "<group>"; };
 		C10000000000000000000012 /* GameControllerBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerBootstrap.swift; sourceTree = "<group>"; };
 		C10000000000000000000013 /* MetalDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalDiagnostics.swift; sourceTree = "<group>"; };
-		C10000000000000000000022 /* ControllerBatteryMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerBatteryMonitor.swift; sourceTree = "<group>"; };
 		C10000000000000000000014 /* GameCoverTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoverTile.swift; sourceTree = "<group>"; };
 		C10000000000000000000015 /* GamesEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesEmptyState.swift; sourceTree = "<group>"; };
 		C10000000000000000000016 /* ProfileLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLoginView.swift; sourceTree = "<group>"; };
@@ -109,6 +142,7 @@
 		C1000000000000000000001E /* StatsHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsHUDView.swift; sourceTree = "<group>"; };
 		C1000000000000000000001F /* NativeMetalPresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMetalPresenterView.swift; sourceTree = "<group>"; };
 		C10000000000000000000020 /* LayerConfigurators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerConfigurators.swift; sourceTree = "<group>"; };
+		C10000000000000000000022 /* ControllerBatteryMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerBatteryMonitor.swift; sourceTree = "<group>"; };
 		D20000000000000000000011 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		D20000000000000000000012 /* NostalgicDotBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostalgicDotBackgroundView.swift; sourceTree = "<group>"; };
 		E10000000000000000000011 /* LiveStatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStatusBadge.swift; sourceTree = "<group>"; };
@@ -140,7 +174,29 @@
 		K70000000000000000000011 /* ProfileActivityFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileActivityFeedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6810450F2FF58646004E2B7E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 681045032FF58646004E2B7E /* StikJIT */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		681045052FF58646004E2B7E /* StikJIT */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6810450F2FF58646004E2B7E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StikJIT; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		681045012FF58646004E2B7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000001 /* StikJIT.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000000000000000000020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -154,9 +210,21 @@
 		A10000000000000000000030 = {
 			isa = PBXGroup;
 			children = (
+				FE0000000000000000000030 /* Config */,
 				A10000000000000000000031 /* DukeX */,
+				681045052FF58646004E2B7E /* StikJIT */,
 				A10000000000000000000032 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		FE0000000000000000000030 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				FE0000000000000000000021 /* DukeXShared.xcconfig */,
+				FE0000000000000000000022 /* DukeXApp.xcconfig */,
+				FE0000000000000000000023 /* StikJIT.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		A10000000000000000000031 /* DukeX */ = {
@@ -178,8 +246,17 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000010 /* DukeX.app */,
+				681045042FF58646004E2B7E /* StikJIT.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000030 /* StikJIT */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000010 /* StikJIT.xcframework */,
+			);
+			path = StikJIT;
 			sourceTree = "<group>";
 		};
 		D10000000000000000000100 /* App */ = {
@@ -221,43 +298,6 @@
 			path = Games;
 			sourceTree = "<group>";
 		};
-		F10000000000000000000100 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				C10000000000000000000014 /* GameCoverTile.swift */,
-				C10000000000000000000015 /* GamesEmptyState.swift */,
-				F20000000000000000000011 /* GameListRow.swift */,
-				E10000000000000000000011 /* LiveStatusBadge.swift */,
-				F10000000000000000000014 /* GameSortPicker.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000101 /* State */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000011 /* GameLibrarySortMode.swift */,
-				F10000000000000000000012 /* GameLibraryCollections.swift */,
-			);
-			path = State;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000102 /* Layout */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000013 /* GameLibraryGridMetrics.swift */,
-			);
-			path = Layout;
-			sourceTree = "<group>";
-		};
-		F20000000000000000000101 /* Metadata */ = {
-			isa = PBXGroup;
-			children = (
-				F20000000000000000000013 /* GameMetadataEditorView.swift */,
-			);
-			path = Metadata;
-			sourceTree = "<group>";
-		};
 		D10000000000000000000112 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,22 +319,6 @@
 				F10000000000000000000103 /* Library */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		H40000000000000000000020 /* Skins */ = {
-			isa = PBXGroup;
-			children = (
-				H40000000000000000000011 /* SkinSettingsView.swift */,
-			);
-			path = Skins;
-			sourceTree = "<group>";
-		};
-		F10000000000000000000103 /* Library */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000015 /* LibraryColumnSettingsView.swift */,
-			);
-			path = Library;
 			sourceTree = "<group>";
 		};
 		D10000000000000000000114 /* Launch */ = {
@@ -327,6 +351,8 @@
 			isa = PBXGroup;
 			children = (
 				B10000000000000000000015 /* AutoJITCoordinator.swift */,
+				FE0000000000000000000012 /* StikJITExtensionLauncher.h */,
+				FE0000000000000000000011 /* StikJITExtensionLauncher.m */,
 			);
 			path = JIT;
 			sourceTree = "<group>";
@@ -378,13 +404,13 @@
 			isa = PBXGroup;
 			children = (
 				B10000000000000000000017 /* NativeMetalPresenterHost.swift */,
-					C10000000000000000000018 /* NativeMetalPresenterSession.swift */,
-					C10000000000000000000019 /* NativeMetalPresenterViewController.swift */,
-					G30000000000000000000100 /* ManicSkin */,
-					D10000000000000000000141 /* Metal */,
-					D10000000000000000000142 /* HUD */,
-					D10000000000000000000143 /* ExitOverlay */,
-				);
+				C10000000000000000000018 /* NativeMetalPresenterSession.swift */,
+				C10000000000000000000019 /* NativeMetalPresenterViewController.swift */,
+				G30000000000000000000100 /* ManicSkin */,
+				D10000000000000000000141 /* Metal */,
+				D10000000000000000000142 /* HUD */,
+				D10000000000000000000143 /* ExitOverlay */,
+			);
 			path = Presenter;
 			sourceTree = "<group>";
 		};
@@ -413,21 +439,11 @@
 			children = (
 				C1000000000000000000001A /* GameplayExitOverlayView.swift */,
 			);
-				path = ExitOverlay;
-				sourceTree = "<group>";
-			};
-			G30000000000000000000100 /* ManicSkin */ = {
-				isa = PBXGroup;
-				children = (
-					G30000000000000000000011 /* ManicSkinModels.swift */,
-					G30000000000000000000012 /* ManicSkinVirtualController.swift */,
-					G30000000000000000000013 /* ManicSkinTouchControlsView.swift */,
-				);
-				path = ManicSkin;
-				sourceTree = "<group>";
-			};
-			D10000000000000000000150 /* Services */ = {
-				isa = PBXGroup;
+			path = ExitOverlay;
+			sourceTree = "<group>";
+		};
+		D10000000000000000000150 /* Services */ = {
+			isa = PBXGroup;
 			children = (
 				I50000000000000000000100 /* CloudSaves */,
 				D10000000000000000000151 /* Insignia */,
@@ -446,6 +462,89 @@
 				J60000000000000000000013 /* XBLiveEmulatorPresenceService.swift */,
 			);
 			path = Insignia;
+			sourceTree = "<group>";
+		};
+		D10000000000000000000160 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000019 /* EarlyMetalDiagnostics.m */,
+				A10000000000000000000015 /* Assets.xcassets */,
+				G30000000000000000000014 /* Skins */,
+				A10000000000000000000016 /* Info.plist */,
+				A10000000000000000000017 /* DukeX.entitlements */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000100 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C10000000000000000000014 /* GameCoverTile.swift */,
+				C10000000000000000000015 /* GamesEmptyState.swift */,
+				F20000000000000000000011 /* GameListRow.swift */,
+				E10000000000000000000011 /* LiveStatusBadge.swift */,
+				F10000000000000000000014 /* GameSortPicker.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000101 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000011 /* GameLibrarySortMode.swift */,
+				F10000000000000000000012 /* GameLibraryCollections.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000102 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000013 /* GameLibraryGridMetrics.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000103 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000015 /* LibraryColumnSettingsView.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		F20000000000000000000100 /* GameMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				F20000000000000000000012 /* GameMetadataStore.swift */,
+			);
+			path = GameMetadata;
+			sourceTree = "<group>";
+		};
+		F20000000000000000000101 /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				F20000000000000000000013 /* GameMetadataEditorView.swift */,
+			);
+			path = Metadata;
+			sourceTree = "<group>";
+		};
+		G30000000000000000000100 /* ManicSkin */ = {
+			isa = PBXGroup;
+			children = (
+				G30000000000000000000011 /* ManicSkinModels.swift */,
+				G30000000000000000000012 /* ManicSkinVirtualController.swift */,
+				G30000000000000000000013 /* ManicSkinTouchControlsView.swift */,
+			);
+			path = ManicSkin;
+			sourceTree = "<group>";
+		};
+		H40000000000000000000020 /* Skins */ = {
+			isa = PBXGroup;
+			children = (
+				H40000000000000000000011 /* SkinSettingsView.swift */,
+			);
+			path = Skins;
 			sourceTree = "<group>";
 		};
 		I50000000000000000000100 /* CloudSaves */ = {
@@ -472,45 +571,51 @@
 			isa = PBXGroup;
 			children = (
 				I50000000000000000000101 /* miniz */,
+				AA0000000000000000000030 /* StikJIT */,
 			);
 			path = Vendor;
-			sourceTree = "<group>";
-		};
-		F20000000000000000000100 /* GameMetadata */ = {
-			isa = PBXGroup;
-			children = (
-				F20000000000000000000012 /* GameMetadataStore.swift */,
-			);
-			path = GameMetadata;
-			sourceTree = "<group>";
-		};
-		D10000000000000000000160 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-					A10000000000000000000019 /* EarlyMetalDiagnostics.m */,
-					A10000000000000000000015 /* Assets.xcassets */,
-					G30000000000000000000014 /* Skins */,
-					A10000000000000000000016 /* Info.plist */,
-					A10000000000000000000017 /* DukeX.entitlements */,
-				);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		681045032FF58646004E2B7E /* StikJIT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 681045102FF58646004E2B7E /* Build configuration list for PBXNativeTarget "StikJIT" */;
+			buildPhases = (
+				681045002FF58646004E2B7E /* Sources */,
+				681045012FF58646004E2B7E /* Frameworks */,
+				681045022FF58646004E2B7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				681045052FF58646004E2B7E /* StikJIT */,
+			);
+			name = StikJIT;
+			packageProductDependencies = (
+			);
+			productName = StikJIT;
+			productReference = 681045042FF58646004E2B7E /* StikJIT.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A10000000000000000000040 /* DukeX */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A10000000000000000000070 /* Build configuration list for PBXNativeTarget "DukeX" */;
 			buildPhases = (
 				A10000000000000000000050 /* Sources */,
 				A10000000000000000000020 /* Frameworks */,
+				AA0000000000000000000020 /* Embed StikJIT Framework */,
 				A10000000000000000000051 /* Resources */,
 				A10000000000000000000052 /* Embed Core Runtime */,
+				6810450C2FF58646004E2B7E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6810450A2FF58646004E2B7E /* PBXTargetDependency */,
 			);
 			name = DukeX;
 			productName = DukeX;
@@ -524,9 +629,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2640;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
+					681045032FF58646004E2B7E = {
+						CreatedOnToolsVersion = 27.0;
+					};
 					A10000000000000000000040 = {
 						CreatedOnToolsVersion = 26.4.1;
 					};
@@ -546,11 +654,19 @@
 			projectRoot = "";
 			targets = (
 				A10000000000000000000040 /* DukeX */,
+				681045032FF58646004E2B7E /* StikJIT */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		681045022FF58646004E2B7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000000000000000000051 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -570,25 +686,52 @@
 			);
 			inputFileListPaths = (
 			);
-				inputPaths = (
-					"$(SRCROOT)/../scripts/embed-core-ios.sh",
-					"$(SRCROOT)/../../build-ios-arm64/libxemu-ios-core.dylib",
-					"$(SRCROOT)/../../build-ios-arm64/subprojects/slirp/libslirp.0.dylib",
-				);
+			inputPaths = (
+				"$(SRCROOT)/../scripts/embed-core-ios.sh",
+				"$(SRCROOT)/../../build-ios-arm64/libxemu-ios-core.dylib",
+				"$(SRCROOT)/../../build-ios-arm64/subprojects/slirp/libslirp.0.dylib",
+			);
 			name = "Embed Core Runtime";
 			outputFileListPaths = (
 			);
-				outputPaths = (
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libxemu-ios-core.dylib",
-					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libslirp.0.dylib",
-				);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libxemu-ios-core.dylib",
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libslirp.0.dylib",
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/../scripts/embed-core-ios.sh\"\n";
 		};
+		AA0000000000000000000020 /* Embed StikJIT Framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(PROJECT_DIR)/DukeX/Vendor/StikJIT/StikJIT.xcframework/ios-arm64/StikJIT.framework",
+			);
+			name = "Embed StikJIT Framework";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/StikJIT.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${PLATFORM_NAME}\" != \"iphoneos\" ]; then\n  echo \"Skipping StikJIT framework embed for ${PLATFORM_NAME}\"\n  exit 0\nfi\n\nSOURCE_FRAMEWORK=\"${PROJECT_DIR}/DukeX/Vendor/StikJIT/StikJIT.xcframework/ios-arm64/StikJIT.framework\"\nDEST_DIR=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nDEST_FRAMEWORK=\"${DEST_DIR}/StikJIT.framework\"\n\nif [ ! -d \"${SOURCE_FRAMEWORK}\" ]; then\n  echo \"Missing StikJIT framework: ${SOURCE_FRAMEWORK}\" >&2\n  exit 1\nfi\n\nmkdir -p \"${DEST_DIR}\"\nrm -rf \"${DEST_FRAMEWORK}\"\nditto \"${SOURCE_FRAMEWORK}\" \"${DEST_FRAMEWORK}\"\nrm -rf \"${DEST_FRAMEWORK}/Headers\" \"${DEST_FRAMEWORK}/PrivateHeaders\"\n\nif [ -n \"${BITCODE_STRIP}\" ] && [ -f \"${DEST_FRAMEWORK}/StikJIT\" ]; then\n  \"${BITCODE_STRIP}\" \"${DEST_FRAMEWORK}/StikJIT\" -r -o \"${DEST_FRAMEWORK}/StikJIT\" || true\nfi\n\nif [ \"${CODE_SIGNING_ALLOWED:-NO}\" != \"NO\" ] && [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n  /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --preserve-metadata=identifier,entitlements,flags --timestamp=none \"${DEST_FRAMEWORK}\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		681045002FF58646004E2B7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000000000000000000050 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -602,34 +745,35 @@
 				C10000000000000000000021 /* ControllerBatteryMonitor.swift in Sources */,
 				C10000000000000000000003 /* MetalDiagnostics.swift in Sources */,
 				B10000000000000000000001 /* GamesLibraryView.swift in Sources */,
-					C10000000000000000000004 /* GameCoverTile.swift in Sources */,
-					C10000000000000000000005 /* GamesEmptyState.swift in Sources */,
-					F20000000000000000000001 /* GameListRow.swift in Sources */,
-					E10000000000000000000001 /* LiveStatusBadge.swift in Sources */,
-					F10000000000000000000001 /* GameLibrarySortMode.swift in Sources */,
-					F10000000000000000000002 /* GameLibraryCollections.swift in Sources */,
-					F10000000000000000000003 /* GameLibraryGridMetrics.swift in Sources */,
-					F10000000000000000000004 /* GameSortPicker.swift in Sources */,
-					B10000000000000000000002 /* ProfileView.swift in Sources */,
-					C10000000000000000000006 /* ProfileLoginView.swift in Sources */,
-					C10000000000000000000007 /* ProfileRows.swift in Sources */,
-					K70000000000000000000001 /* ProfileActivityFeedView.swift in Sources */,
-					B1000000000000000000000A /* InsigniaProfileStore.swift in Sources */,
-					E10000000000000000000002 /* InsigniaLiveStatusStore.swift in Sources */,
-					I50000000000000000000001 /* XBLCloudSaveService.swift in Sources */,
-					J60000000000000000000001 /* XBLiveSocialService.swift in Sources */,
-					J60000000000000000000003 /* XBLiveEmulatorPresenceService.swift in Sources */,
-					J60000000000000000000002 /* ProfileSocialRows.swift in Sources */,
-					I50000000000000000000002 /* FATXHDDCloudSaveStore.swift in Sources */,
-					I50000000000000000000005 /* XboxEEPROMIdentity.swift in Sources */,
-					F20000000000000000000002 /* GameMetadataStore.swift in Sources */,
-					B1000000000000000000000B /* SettingsView.swift in Sources */,
-					B10000000000000000000004 /* SettingsRows.swift in Sources */,
-					F10000000000000000000005 /* LibraryColumnSettingsView.swift in Sources */,
-					H40000000000000000000001 /* SkinSettingsView.swift in Sources */,
-					F20000000000000000000003 /* GameMetadataEditorView.swift in Sources */,
-					B10000000000000000000003 /* DocumentImportPicker.swift in Sources */,
+				C10000000000000000000004 /* GameCoverTile.swift in Sources */,
+				C10000000000000000000005 /* GamesEmptyState.swift in Sources */,
+				F20000000000000000000001 /* GameListRow.swift in Sources */,
+				E10000000000000000000001 /* LiveStatusBadge.swift in Sources */,
+				F10000000000000000000001 /* GameLibrarySortMode.swift in Sources */,
+				F10000000000000000000002 /* GameLibraryCollections.swift in Sources */,
+				F10000000000000000000003 /* GameLibraryGridMetrics.swift in Sources */,
+				F10000000000000000000004 /* GameSortPicker.swift in Sources */,
+				B10000000000000000000002 /* ProfileView.swift in Sources */,
+				C10000000000000000000006 /* ProfileLoginView.swift in Sources */,
+				C10000000000000000000007 /* ProfileRows.swift in Sources */,
+				K70000000000000000000001 /* ProfileActivityFeedView.swift in Sources */,
+				B1000000000000000000000A /* InsigniaProfileStore.swift in Sources */,
+				E10000000000000000000002 /* InsigniaLiveStatusStore.swift in Sources */,
+				I50000000000000000000001 /* XBLCloudSaveService.swift in Sources */,
+				J60000000000000000000001 /* XBLiveSocialService.swift in Sources */,
+				J60000000000000000000003 /* XBLiveEmulatorPresenceService.swift in Sources */,
+				J60000000000000000000002 /* ProfileSocialRows.swift in Sources */,
+				I50000000000000000000002 /* FATXHDDCloudSaveStore.swift in Sources */,
+				I50000000000000000000005 /* XboxEEPROMIdentity.swift in Sources */,
+				F20000000000000000000002 /* GameMetadataStore.swift in Sources */,
+				B1000000000000000000000B /* SettingsView.swift in Sources */,
+				B10000000000000000000004 /* SettingsRows.swift in Sources */,
+				F10000000000000000000005 /* LibraryColumnSettingsView.swift in Sources */,
+				H40000000000000000000001 /* SkinSettingsView.swift in Sources */,
+				F20000000000000000000003 /* GameMetadataEditorView.swift in Sources */,
+				B10000000000000000000003 /* DocumentImportPicker.swift in Sources */,
 				B10000000000000000000005 /* AutoJITCoordinator.swift in Sources */,
+				FE0000000000000000000001 /* StikJITExtensionLauncher.m in Sources */,
 				B10000000000000000000006 /* LaunchPlanView.swift in Sources */,
 				B10000000000000000000009 /* EmulatorLibraryModels.swift in Sources */,
 				A10000000000000000000003 /* EmulatorFileStore.swift in Sources */,
@@ -644,20 +788,109 @@
 				C1000000000000000000000C /* DisplayStatsBridge.swift in Sources */,
 				C1000000000000000000000D /* AppResourceMonitor.swift in Sources */,
 				C1000000000000000000000E /* StatsHUDView.swift in Sources */,
-					C1000000000000000000000F /* NativeMetalPresenterView.swift in Sources */,
-					C10000000000000000000010 /* LayerConfigurators.swift in Sources */,
-					G30000000000000000000001 /* ManicSkinModels.swift in Sources */,
-					G30000000000000000000002 /* ManicSkinVirtualController.swift in Sources */,
-					G30000000000000000000003 /* ManicSkinTouchControlsView.swift in Sources */,
-					I50000000000000000000003 /* DukeXZipArchive.m in Sources */,
-					I50000000000000000000004 /* miniz.c in Sources */,
-					A10000000000000000000007 /* EarlyMetalDiagnostics.m in Sources */,
-				);
+				C1000000000000000000000F /* NativeMetalPresenterView.swift in Sources */,
+				C10000000000000000000010 /* LayerConfigurators.swift in Sources */,
+				G30000000000000000000001 /* ManicSkinModels.swift in Sources */,
+				G30000000000000000000002 /* ManicSkinVirtualController.swift in Sources */,
+				G30000000000000000000003 /* ManicSkinTouchControlsView.swift in Sources */,
+				I50000000000000000000003 /* DukeXZipArchive.m in Sources */,
+				I50000000000000000000004 /* miniz.c in Sources */,
+				A10000000000000000000007 /* EarlyMetalDiagnostics.m in Sources */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		6810450A2FF58646004E2B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 681045032FF58646004E2B7E /* StikJIT */;
+			targetProxy = 681045092FF58646004E2B7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		6810450D2FF58646004E2B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE0000000000000000000023 /* StikJIT.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_ENTITLEMENTS = StikJIT/StikJIT.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 102;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DukeX/Vendor/StikJIT",
+				);
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StikJIT/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = StikJIT;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0.2;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_PREVIEWS = NO;
+				PRODUCT_MODULE_NAME = DukeXStikJITRunner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6810450E2FF58646004E2B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE0000000000000000000023 /* StikJIT.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_ENTITLEMENTS = StikJIT/StikJIT.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 102;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DukeX/Vendor/StikJIT",
+				);
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StikJIT/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = StikJIT;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0.2;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_PREVIEWS = NO;
+				PRODUCT_MODULE_NAME = DukeXStikJITRunner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		A10000000000000000000062 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -709,7 +942,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-					IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -764,7 +997,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-					IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -775,22 +1008,21 @@
 		};
 		A10000000000000000000071 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE0000000000000000000022 /* DukeXApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGC;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = DukeX/DukeX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 102;
-					DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DukeX/Info.plist;
-					IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-					PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
 				PRODUCT_NAME = DukeX;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -805,22 +1037,21 @@
 		};
 		A10000000000000000000072 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE0000000000000000000022 /* DukeXApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGC;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = DukeX/DukeX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 102;
-					DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DukeX/Info.plist;
-					IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-					PRODUCT_BUNDLE_IDENTIFIER = com.mafty.dukex;
 				PRODUCT_NAME = DukeX;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -836,6 +1067,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		681045102FF58646004E2B7E /* Build configuration list for PBXNativeTarget "StikJIT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6810450D2FF58646004E2B7E /* Debug */,
+				6810450E2FF58646004E2B7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A10000000000000000000061 /* Build configuration list for PBXProject "DukeX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

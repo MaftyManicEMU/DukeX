@@ -161,8 +161,8 @@ struct AutoJITStatusRow: View {
                 .frame(width: 24)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("StikDebug")
-                Text(status ?? "Ready for auto-enable")
+                Text("StikJIT")
+                Text(status ?? "Ready for in-app auto-enable")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)

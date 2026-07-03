@@ -337,6 +337,7 @@ enum ImportTarget: String, Identifiable {
     case systemFiles
     case games
     case skins
+    case pairingFile
 
     var id: String { rawValue }
 
@@ -362,6 +363,13 @@ enum ImportTarget: String, Identifiable {
             ].compactMap { $0 }
         case .skins:
             return SkinPackageFormat.allowedContentTypes + [.item]
+        case .pairingFile:
+            return [
+                UTType(filenameExtension: "plist"),
+                .propertyList,
+                .data,
+                .item
+            ].compactMap { $0 }
         }
     }
 }
@@ -495,14 +503,6 @@ enum RuntimeJITMode: String {
         self == .universalJS
     }
 
-    var stikDebugScriptName: String? {
-        switch self {
-        case .wxReprotection:
-            return nil
-        case .universalJS:
-            return "Universal.js"
-        }
-    }
 }
 
 enum UniversalJITSupport {

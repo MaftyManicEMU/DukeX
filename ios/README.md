@@ -24,7 +24,7 @@ DukeX chooses the JIT path by iOS version. iOS 16 through 18 use QEMU TCG's
 split W^X mapping path after the process has been granted JIT. iOS 26 or later
 uses the Universal.js path exposed as `XEMU_IOS_UNIVERSAL_JIT=1`, which lets
 the TCG hook in `tcg/ios-jit.c` issue the `brk #0xf00d` prepare-region request
-expected by StikDebug's Universal.js.
+expected by StikJIT's Universal.js.
 
 Core build note: QEMU/xemu `configure` rejects source and build paths containing
 spaces or colons. Core configure/build checks need an actual no-space checkout
