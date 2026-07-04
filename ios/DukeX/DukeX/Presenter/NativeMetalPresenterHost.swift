@@ -183,7 +183,10 @@ final class NativeMetalPresenterHost {
         let exitOverlayView = GameplayExitOverlayView(
             session: session,
             onExitRequested: onExitRequested,
-            onRestartRequested: onRestartRequested
+            onRestartRequested: onRestartRequested,
+            shouldShowControllerSelectionHighlight: { [weak self] in
+                self?.isControllerLandscapeModeActive == true
+            }
         )
         exitOverlayView.translatesAutoresizingMaskIntoConstraints = false
         rootController.view.addSubview(exitOverlayView)
@@ -677,6 +680,15 @@ final class NativeMetalPresenterHost {
                 exitOverlayView.handleControllerInput(.right)
             }
         }
+    }
+
+    private var isControllerLandscapeModeActive: Bool {
+        guard GCController.controllers().contains(where: Self.isPhysicalGameControllerForPresenter) else {
+            return false
+        }
+
+        let bounds = rootController?.view.bounds ?? window?.bounds ?? .zero
+        return bounds.width > bounds.height
     }
 
     private func controllerInputsPressed(on controller: GCController) -> Set<NativePresenterControllerInput> {

@@ -19,6 +19,7 @@ final class GameplayExitOverlayView: UIView {
     private let session: NativeMetalPresenterSession
     private let onExitRequested: () -> Void
     private let onRestartRequested: () -> Bool
+    private let shouldShowControllerSelectionHighlight: () -> Bool
     private let panelView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let titleLabel = UILabel()
     private let messageLabel = UILabel()
@@ -26,6 +27,7 @@ final class GameplayExitOverlayView: UIView {
     private let exitButton = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     private var controllerSelection: ControllerSelection = .exit
+    private var showsControllerSelectionHighlight = false
     private var actionHasBeenRequested = false
     private var suppressShowUntil: CFTimeInterval = 0
     private var suppressRawTouchHandlingUntil: CFTimeInterval = 0
@@ -33,11 +35,13 @@ final class GameplayExitOverlayView: UIView {
     init(
         session: NativeMetalPresenterSession,
         onExitRequested: @escaping () -> Void,
-        onRestartRequested: @escaping () -> Bool
+        onRestartRequested: @escaping () -> Bool,
+        shouldShowControllerSelectionHighlight: @escaping () -> Bool = { false }
     ) {
         self.session = session
         self.onExitRequested = onExitRequested
         self.onRestartRequested = onRestartRequested
+        self.shouldShowControllerSelectionHighlight = shouldShowControllerSelectionHighlight
         super.init(frame: .zero)
         configure()
     }
@@ -69,6 +73,7 @@ final class GameplayExitOverlayView: UIView {
         isUserInteractionEnabled = true
         accessibilityViewIsModal = true
         controllerSelection = .exit
+        showsControllerSelectionHighlight = shouldShowControllerSelectionHighlight()
         updateControllerSelectionAppearance()
         suppressRawTouchHandlingUntil = CACurrentMediaTime() + 0.25
         UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseOut]) {
@@ -139,6 +144,8 @@ final class GameplayExitOverlayView: UIView {
         layoutIfNeeded()
         panelView.setNeedsLayout()
         panelView.layoutIfNeeded()
+        showsControllerSelectionHighlight = shouldShowControllerSelectionHighlight()
+        updateControllerSelectionAppearance()
     }
 
     @discardableResult
@@ -377,6 +384,7 @@ final class GameplayExitOverlayView: UIView {
         exitButton.isEnabled = true
         cancelButton.isEnabled = true
         controllerSelection = .exit
+        showsControllerSelectionHighlight = shouldShowControllerSelectionHighlight()
         titleLabel.text = session.isDashboard ? "Exit Dashboard?" : "Exit Gameplay?"
         messageLabel.text = session.isDashboard ?
             "DukeX will stop the dashboard and return to the Games tab." :
@@ -427,6 +435,13 @@ final class GameplayExitOverlayView: UIView {
     }
 
     private func updateControllerSelectionAppearance() {
+        guard showsControllerSelectionHighlight else {
+            clearControllerSelectionAppearance(for: restartButton)
+            clearControllerSelectionAppearance(for: exitButton)
+            clearControllerSelectionAppearance(for: cancelButton)
+            return
+        }
+
         updateControllerSelectionAppearance(for: restartButton, selected: controllerSelection == .restart)
         updateControllerSelectionAppearance(for: exitButton, selected: controllerSelection == .exit)
         updateControllerSelectionAppearance(for: cancelButton, selected: controllerSelection == .cancel)
@@ -440,6 +455,15 @@ final class GameplayExitOverlayView: UIView {
         button.layer.shadowRadius = selected ? 8 : 0
         button.layer.shadowOffset = .zero
         button.transform = selected ? CGAffineTransform(scaleX: 1.02, y: 1.02) : .identity
+    }
+
+    private func clearControllerSelectionAppearance(for button: UIButton) {
+        button.layer.borderColor = UIColor.clear.cgColor
+        button.layer.borderWidth = 0
+        button.layer.shadowOpacity = 0
+        button.layer.shadowRadius = 0
+        button.layer.shadowOffset = .zero
+        button.transform = .identity
     }
 
     private func primaryButtonConfiguration(title: String, color: UIColor) -> UIButton.Configuration {

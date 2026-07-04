@@ -307,8 +307,9 @@ struct ProfileView: View {
                 }
 
                 Button(action: signIn) {
-                    Label("Sign In", systemImage: "person.crop.circle.badge.plus")
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                    Text("Sign In")
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .center)
+                        .multilineTextAlignment(.center)
                 }
                 .buttonStyle(.borderedProminent)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
