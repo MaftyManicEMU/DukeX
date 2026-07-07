@@ -36,6 +36,687 @@
         "moduleName": "StikJIT"
       },
       {
+        "kind": "TypeDecl",
+        "name": "DDIPaths",
+        "printedName": "DDIPaths",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "imagePath",
+            "printedName": "imagePath",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:7StikJIT8DDIPathsV9imagePathSSvp",
+            "mangledName": "$s7StikJIT8DDIPathsV9imagePathSSvp",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV9imagePathSSvg",
+                "mangledName": "$s7StikJIT8DDIPathsV9imagePathSSvg",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV9imagePathSSvs",
+                "mangledName": "$s7StikJIT8DDIPathsV9imagePathSSvs",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV9imagePathSSvM",
+                "mangledName": "$s7StikJIT8DDIPathsV9imagePathSSvM",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "trustcachePath",
+            "printedName": "trustcachePath",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:7StikJIT8DDIPathsV14trustcachePathSSvp",
+            "mangledName": "$s7StikJIT8DDIPathsV14trustcachePathSSvp",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV14trustcachePathSSvg",
+                "mangledName": "$s7StikJIT8DDIPathsV14trustcachePathSSvg",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV14trustcachePathSSvs",
+                "mangledName": "$s7StikJIT8DDIPathsV14trustcachePathSSvs",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV14trustcachePathSSvM",
+                "mangledName": "$s7StikJIT8DDIPathsV14trustcachePathSSvM",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "manifestPath",
+            "printedName": "manifestPath",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:7StikJIT8DDIPathsV12manifestPathSSvp",
+            "mangledName": "$s7StikJIT8DDIPathsV12manifestPathSSvp",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV12manifestPathSSvg",
+                "mangledName": "$s7StikJIT8DDIPathsV12manifestPathSSvg",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV12manifestPathSSvs",
+                "mangledName": "$s7StikJIT8DDIPathsV12manifestPathSSvs",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT8DDIPathsV12manifestPathSSvM",
+                "mangledName": "$s7StikJIT8DDIPathsV12manifestPathSSvM",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(imagePath:trustcachePath:manifestPath:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:7StikJIT8DDIPathsV9imagePath010trustcacheE008manifestE0ACSS_S2Stcfc",
+            "mangledName": "$s7StikJIT8DDIPathsV9imagePath010trustcacheE008manifestE0ACSS_S2Stcfc",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "default",
+            "printedName": "default(in:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJIT8DDIPathsV7default2inAC10Foundation3URLV_tFZ",
+            "mangledName": "$s7StikJIT8DDIPathsV7default2inAC10Foundation3URLV_tFZ",
+            "moduleName": "StikJIT",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:7StikJIT8DDIPathsV",
+        "mangledName": "$s7StikJIT8DDIPathsV",
+        "moduleName": "StikJIT",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "DeveloperDiskImageService",
+        "printedName": "DeveloperDiskImageService",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "shared",
+            "printedName": "shared",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DeveloperDiskImageService",
+                "printedName": "StikJIT.DeveloperDiskImageService",
+                "usr": "s:7StikJIT25DeveloperDiskImageServiceC"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:7StikJIT25DeveloperDiskImageServiceC6sharedACvpZ",
+            "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC6sharedACvpZ",
+            "moduleName": "StikJIT",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeveloperDiskImageService",
+                    "printedName": "StikJIT.DeveloperDiskImageService",
+                    "usr": "s:7StikJIT25DeveloperDiskImageServiceC"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT25DeveloperDiskImageServiceC6sharedACvgZ",
+                "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC6sharedACvgZ",
+                "moduleName": "StikJIT",
+                "static": true,
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(session:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DeveloperDiskImageService",
+                "printedName": "StikJIT.DeveloperDiskImageService",
+                "usr": "s:7StikJIT25DeveloperDiskImageServiceC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URLSession",
+                "printedName": "Foundation.URLSession",
+                "hasDefaultArg": true,
+                "usr": "c:objc(cs)NSURLSession"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:7StikJIT25DeveloperDiskImageServiceC7sessionACSo12NSURLSessionC_tcfc",
+            "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC7sessionACSo12NSURLSessionC_tcfc",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "downloadIfNeeded",
+            "printedName": "downloadIfNeeded(to:progress:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Double, Swift.String) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.Double, Swift.String)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "hasDefaultArg": true
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJIT25DeveloperDiskImageServiceC16downloadIfNeeded2to8progressyAA8DDIPathsV_ySd_SStctYaKF",
+            "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC16downloadIfNeeded2to8progressyAA8DDIPathsV_ySd_SStctYaKF",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "download",
+            "printedName": "download(to:progress:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Double, Swift.String) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.Double, Swift.String)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "hasDefaultArg": true
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJIT25DeveloperDiskImageServiceC8download2to8progressyAA8DDIPathsV_ySd_SStctYaKF",
+            "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC8download2to8progressyAA8DDIPathsV_ySd_SStctYaKF",
+            "moduleName": "StikJIT",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Var",
+            "name": "unownedExecutor",
+            "printedName": "unownedExecutor",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnownedSerialExecutor",
+                "printedName": "_Concurrency.UnownedSerialExecutor",
+                "usr": "s:Sce"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:7StikJIT25DeveloperDiskImageServiceC15unownedExecutorScevp",
+            "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC15unownedExecutorScevp",
+            "moduleName": "StikJIT",
+            "implicit": true,
+            "intro_Macosx": "10.15",
+            "intro_iOS": "17.4",
+            "intro_tvOS": "13.0",
+            "intro_watchOS": "6.0",
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Final",
+              "Nonisolated",
+              "Semantics"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnownedSerialExecutor",
+                    "printedName": "_Concurrency.UnownedSerialExecutor",
+                    "usr": "s:Sce"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:7StikJIT25DeveloperDiskImageServiceC15unownedExecutorScevg",
+                "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC15unownedExecutorScevg",
+                "moduleName": "StikJIT",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:7StikJIT25DeveloperDiskImageServiceC",
+        "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC",
+        "moduleName": "StikJIT",
+        "intro_iOS": "17.4",
+        "declAttributes": [
+          "AccessControl",
+          "Available"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Actor",
+            "printedName": "Actor",
+            "usr": "s:ScA",
+            "mangledName": "$sScA"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StikJIT"
+      },
+      {
+        "kind": "Import",
+        "name": "idevice",
+        "printedName": "idevice",
+        "declKind": "Import",
+        "moduleName": "StikJIT",
+        "declAttributes": [
+          "ImplementationOnly"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StikJIT"
+      },
+      {
         "kind": "Import",
         "name": "idevice",
         "printedName": "idevice",
@@ -664,6 +1345,164 @@
             ],
             "throwing": true,
             "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "isDDIMounted",
+            "printedName": "isDDIMounted(pairingFile:configuration:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Configuration",
+                "printedName": "StikJIT.StikJIT.Configuration",
+                "hasDefaultArg": true,
+                "usr": "s:7StikJITAAO13ConfigurationV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJITAAO12isDDIMounted11pairingFile13configurationSb10Foundation3URLV_AB13ConfigurationVtKFZ",
+            "mangledName": "$s7StikJITAAO12isDDIMounted11pairingFile13configurationSb10Foundation3URLV_AB13ConfigurationVtKFZ",
+            "moduleName": "StikJIT",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "downloadDDIIfNeeded",
+            "printedName": "downloadDDIIfNeeded(to:progress:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Double, Swift.String) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.Double, Swift.String)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "hasDefaultArg": true
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJITAAO19downloadDDIIfNeeded2to8progressyAA8DDIPathsV_ySd_SStctYaKFZ",
+            "mangledName": "$s7StikJITAAO19downloadDDIIfNeeded2to8progressyAA8DDIPathsV_ySd_SStctYaKFZ",
+            "moduleName": "StikJIT",
+            "static": true,
+            "intro_iOS": "17.4",
+            "declAttributes": [
+              "AccessControl",
+              "Available"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "mountDDI",
+            "printedName": "mountDDI(pairingFile:configuration:paths:progress:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Configuration",
+                "printedName": "StikJIT.StikJIT.Configuration",
+                "hasDefaultArg": true,
+                "usr": "s:7StikJITAAO13ConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDIPaths",
+                "printedName": "StikJIT.DDIPaths",
+                "usr": "s:7StikJIT8DDIPathsV"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Double) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "hasDefaultArg": true
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:7StikJITAAO8mountDDI11pairingFile13configuration5paths8progressy10Foundation3URLV_AB13ConfigurationVAA8DDIPathsVySdctKFZ",
+            "mangledName": "$s7StikJITAAO8mountDDI11pairingFile13configuration5paths8progressy10Foundation3URLV_AB13ConfigurationVAA8DDIPathsVySdctKFZ",
+            "moduleName": "StikJIT",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Enum",
@@ -897,6 +1736,106 @@
           },
           {
             "kind": "Var",
+            "name": "ddiDownload",
+            "printedName": "ddiDownload",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(StikJIT.StikJITError.Type) -> (Swift.String) -> StikJIT.StikJITError",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> StikJIT.StikJITError",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StikJITError",
+                        "printedName": "StikJIT.StikJITError",
+                        "usr": "s:7StikJIT0A8JITErrorO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "StikJIT.StikJITError.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StikJITError",
+                        "printedName": "StikJIT.StikJITError",
+                        "usr": "s:7StikJIT0A8JITErrorO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:7StikJIT0A8JITErrorO11ddiDownloadyACSScACmF",
+            "mangledName": "$s7StikJIT0A8JITErrorO11ddiDownloadyACSScACmF",
+            "moduleName": "StikJIT"
+          },
+          {
+            "kind": "Var",
+            "name": "ddiFilesMissing",
+            "printedName": "ddiFilesMissing",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(StikJIT.StikJITError.Type) -> (Swift.String) -> StikJIT.StikJITError",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> StikJIT.StikJITError",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StikJITError",
+                        "printedName": "StikJIT.StikJITError",
+                        "usr": "s:7StikJIT0A8JITErrorO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "StikJIT.StikJITError.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StikJITError",
+                        "printedName": "StikJIT.StikJITError",
+                        "usr": "s:7StikJIT0A8JITErrorO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:7StikJIT0A8JITErrorO15ddiFilesMissingyACSScACmF",
+            "mangledName": "$s7StikJIT0A8JITErrorO15ddiFilesMissingyACSScACmF",
+            "moduleName": "StikJIT"
+          },
+          {
+            "kind": "Var",
             "name": "errorDescription",
             "printedName": "errorDescription",
             "children": [
@@ -1002,11 +1941,32 @@
   },
   "ConstValues": [
     {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/DeveloperDiskImageService.swift",
+      "kind": "StringLiteral",
+      "offset": 1412,
+      "length": 114,
+      "value": "\"https:\/\/github.com\/doronz88\/DeveloperDiskImage\/raw\/refs\/heads\/main\/PersonalizedImages\/Xcode_iOS_DDI_Personalized\""
+    },
+    {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/ScriptRunner.swift",
       "kind": "IntegerLiteral",
       "offset": 150,
       "length": 5,
       "value": "16384"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/ScriptRunner.swift",
+      "kind": "IntegerLiteral",
+      "offset": 202,
+      "length": 2,
+      "value": "19"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/ScriptRunner.swift",
+      "kind": "IntegerLiteral",
+      "offset": 247,
+      "length": 3,
+      "value": "128"
     },
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",

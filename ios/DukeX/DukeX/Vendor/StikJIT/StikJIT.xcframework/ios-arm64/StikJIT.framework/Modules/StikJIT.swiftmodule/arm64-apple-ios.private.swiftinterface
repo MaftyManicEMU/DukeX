@@ -8,6 +8,25 @@ import Swift
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
+public struct DDIPaths : Swift.Sendable {
+  public var imagePath: Swift.String
+  public var trustcachePath: Swift.String
+  public var manifestPath: Swift.String
+  public init(imagePath: Swift.String, trustcachePath: Swift.String, manifestPath: Swift.String)
+  public static func `default`(in directory: Foundation.URL) -> DDIPaths
+}
+@available(iOS 17.4, *)
+public actor DeveloperDiskImageService {
+  public static let shared: DeveloperDiskImageService
+  public init(session: Foundation.URLSession = .shared)
+  public func downloadIfNeeded(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
+  public func download(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
+  @objc deinit
+  @available(iOS 17.4, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  @_semantics("defaultActor") nonisolated final public var unownedExecutor: _Concurrency.UnownedSerialExecutor {
+    get
+  }
+}
 public enum StikJIT {
   public enum Script : Swift.Sendable {
     case universal
@@ -25,12 +44,18 @@ public enum StikJIT {
     public static let `default`: StikJIT.Configuration
   }
   public static func enableJIT(targetPID: Swift.Int32, pairingFile: Foundation.URL, configuration: StikJIT.Configuration = .default, script: StikJIT.Script = .universal, progress: @escaping (Swift.String) -> Swift.Void = { _ in }) throws
+  public static func isDDIMounted(pairingFile: Foundation.URL, configuration: StikJIT.Configuration = .default) throws -> Swift.Bool
+  @available(iOS 17.4, *)
+  public static func downloadDDIIfNeeded(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
+  public static func mountDDI(pairingFile: Foundation.URL, configuration: StikJIT.Configuration = .default, paths: DDIPaths, progress: @escaping (Swift.Double) -> Swift.Void = { _ in }) throws
 }
 public enum StikJITError : Swift.Error, Foundation.LocalizedError {
   case pairingFile(Swift.String)
   case scriptUnavailable
   case debugProxyUnavailable
   case device(code: Swift.Int32, subCode: Swift.Int32, message: Swift.String)
+  case ddiDownload(Swift.String)
+  case ddiFilesMissing(Swift.String)
   public var errorDescription: Swift.String? {
     get
   }

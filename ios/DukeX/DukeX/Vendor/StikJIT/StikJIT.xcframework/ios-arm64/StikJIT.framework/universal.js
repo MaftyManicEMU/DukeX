@@ -55,15 +55,15 @@ let attachResponse = send_command(`vAttach;${pid.toString(16)}`);
 
 log(`pid = ${pid}`);
 log(`attach_response = ${attachResponse}`);
-
+    
 let totalBreakpoints = 0;
 while (!detached) {
     totalBreakpoints++;
     log(`Handling signal ${totalBreakpoints}`);
-
+    
     let brkResponse = send_command(`c`);
     log_verbose(`brkResponse = ${brkResponse}`);
-
+    
     // extract tid, pc, x16
     let tmpMatch = /T[0-9a-f]+thread:(?<tid>[0-9a-f]+);/.exec(brkResponse);
     tid = tmpMatch ? tmpMatch.groups['tid'] : null;
@@ -77,11 +77,11 @@ while (!detached) {
     }
     pc = littleEndianHexStringToNumber(pc);
     x16 = littleEndianHexStringToNumber(x16);
-
+    
     let instructionResponse = send_command(`m${pc.toString(16)},4`);
     log(`instruction at pc: ${instructionResponse}`);
     let instrU32 = littleEndianHexToU32(instructionResponse);
-
+    
     // check if this is a brk
     if ((instrU32 & 0xFFE0001F)>>>0 != 0xD4200000) {
         log(`Skipping: instruction was not a brk (was 0x${instrU32.toString(16)})`);
@@ -97,7 +97,7 @@ while (!detached) {
         }
         continue;
     }
-
+    
     let brkImmediate = extractBrkImmediate(instrU32);
     log(`BRK immediate: 0x${brkImmediate.toString(16)} (${brkImmediate})`);
     if (legacyCommands[brkImmediate] != undefined) {
@@ -112,12 +112,12 @@ while (!detached) {
         }
         x0 = littleEndianHexStringToNumber(x0);
         x1 = littleEndianHexStringToNumber(x1);
-
+        
         // jump over brk
         let pcPlus4 = numberToLittleEndianHexString(pc + 4n);
         let pcPlus4Response = send_command(`P20=${pcPlus4};thread:${tid};`);
         log(`pcPlus4Response = ${pcPlus4Response}`);
-
+        
         // dispatch brk-immediate command
         const command = legacyCommands[brkImmediate];
         command(brkResponse);
@@ -139,7 +139,7 @@ function JIT26NewBreakpoints(brkResponse) {
     log(`instruction at pc: ${instructionResponse}`);
     let instrU32 = littleEndianHexToU32(instructionResponse);
     let brkImmediate = extractBrkImmediate(instrU32);
-
+    
     let memResponse = send_command(`m${x0.toString(16)},${x1}`);
 
     let scriptText = hexToAscii(memResponse);
@@ -180,7 +180,7 @@ function JIT26PrepareRegion(brkResponse) {
     log(`instruction at pc: ${instructionResponse}`);
     let instrU32 = littleEndianHexToU32(instructionResponse);
     let brkImmediate = extractBrkImmediate(instrU32);
-
+    
     if (x0 == 0n && x1 == 0n) {
         return;
     }
@@ -189,12 +189,12 @@ function JIT26PrepareRegion(brkResponse) {
     if (x0 == 0n) {
         let requestRXResponse = send_command(`_M${x1.toString(16)},rx`);
         log_verbose(`requestRXResponse = ${requestRXResponse}`);
-
+        
         if (!requestRXResponse || requestRXResponse.length === 0) {
             log(`Failed to allocate RX memory`);
             return;
         }
-
+        
         jitPageAddress = BigInt(`0x${requestRXResponse}`);
         log(`Allocated JIT page at address: 0x${jitPageAddress.toString(16)}`);
     }
@@ -281,7 +281,7 @@ function wowBreakPoint(brekpoint) {
     log(`instruction at pc: ${instructionResponse}`);
     let instrU32 = littleEndianHexToU32(instructionResponse);
     let brkImmediate = extractBrkImmediate(instrU32);
-
+    
     if (x0 == 0n && x1 == 0n) {
         return;
     }
