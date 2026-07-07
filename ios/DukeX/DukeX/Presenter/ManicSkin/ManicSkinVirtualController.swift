@@ -86,8 +86,8 @@ final class ManicSkinVirtualControllerBridge {
         Int16
     ) -> Void
 
-    private var coreHandle: UnsafeMutableRawPointer?
     private var setTouchControllerState: SetTouchControllerState?
+    private var setTouchControllerStateGeneration: UInt64?
     private var activeDigitalDirections = Set<String>()
     private var activeButtonInputs = Set<String>()
     private var touchControlsActive = false
@@ -256,31 +256,28 @@ final class ManicSkinVirtualControllerBridge {
     }
 
     private func resolveSetTouchControllerState() -> SetTouchControllerState? {
-        if let setTouchControllerState {
+        let currentGeneration = XemuCoreRuntimeSymbolResolver.shared.currentGeneration()
+        if let setTouchControllerState,
+           setTouchControllerStateGeneration == currentGeneration {
             return setTouchControllerState
         }
 
-        guard let frameworksURL = Bundle.main.privateFrameworksURL else {
-            logMissingCoreSymbol("missing private frameworks URL")
-            return nil
-        }
+        setTouchControllerState = nil
+        setTouchControllerStateGeneration = nil
 
-        let coreURL = frameworksURL.appendingPathComponent("libxemu-ios-core.dylib")
-        guard let handle = dlopen(coreURL.path, RTLD_NOW | RTLD_LOCAL) else {
-            let errorMessage = dlerror().map { String(cString: $0) } ?? "dlopen failed"
-            logMissingCoreSymbol(errorMessage)
-            return nil
-        }
-
-        guard let symbol = dlsym(handle, "xemu_ios_set_touch_controller_state") else {
+        guard let resolved = XemuCoreRuntimeSymbolResolver.shared.resolve("xemu_ios_set_touch_controller_state") else {
             logMissingCoreSymbol("xemu_ios_set_touch_controller_state is unavailable")
             return nil
         }
 
-        coreHandle = handle
-        let setter = unsafeBitCast(symbol, to: SetTouchControllerState.self)
+        let setter = unsafeBitCast(resolved.symbol, to: SetTouchControllerState.self)
         setTouchControllerState = setter
-        NativeMetalDiagnostics.log("TOUCH_BRIDGE_SYMBOL", "resolved=1")
+        setTouchControllerStateGeneration = resolved.generation
+        didLogMissingCoreSymbol = false
+        NativeMetalDiagnostics.log(
+            "TOUCH_BRIDGE_SYMBOL",
+            "resolved=1 generation=\(resolved.generation)"
+        )
         return setter
     }
 

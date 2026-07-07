@@ -757,6 +757,18 @@ struct ContentView: View {
     }
 
     private func launch(_ target: AutoJITLaunchTarget) throws {
+        guard !runtime.isCoreSlotLimitReached else {
+            activeRuntimeWasGame = false
+            if target == .game {
+                emulatorPresence.stop(reason: "core slots exhausted")
+            }
+            store.message = UserMessage(
+                title: "Restart Required",
+                detail: "DukeX has used all available disposable core slots for this session. Restart DukeX to clear the core slots before launching another game."
+            )
+            return
+        }
+
         let plan = try makePlan(for: target)
         activeRuntimeWasGame = target == .game
         guard plan.requiresJITHandoff && store.autoJITBeforeLaunchEnabled else {

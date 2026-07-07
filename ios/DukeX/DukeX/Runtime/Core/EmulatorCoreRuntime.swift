@@ -49,6 +49,65 @@ private let dukexInputDiagnosticCallback: XemuInputDiagnosticCallback = { messag
     NativeMetalDiagnostics.log("CORE_INPUT", String(cString: message))
 }
 
+final class XemuCoreRuntimeSymbolResolver {
+    static let shared = XemuCoreRuntimeSymbolResolver()
+
+    private let lock = NSLock()
+    private var activeHandle: UnsafeMutableRawPointer?
+    private var activeSlotIndex: Int?
+    private var activeCoreURL: URL?
+    private var generation: UInt64 = 0
+
+    private init() {}
+
+    func activate(handle: UnsafeMutableRawPointer?, slotIndex: Int, coreURL: URL) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        activeHandle = handle
+        activeSlotIndex = slotIndex
+        activeCoreURL = coreURL
+        generation &+= 1
+        NativeMetalDiagnostics.log(
+            "CORE_SLOT_ACTIVE",
+            "slot=\(slotIndex) url=\(coreURL.lastPathComponent) generation=\(generation)"
+        )
+    }
+
+    func deactivate(handle: UnsafeMutableRawPointer?) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        guard activeHandle == handle else {
+            return
+        }
+
+        activeHandle = nil
+        activeSlotIndex = nil
+        activeCoreURL = nil
+        generation &+= 1
+        NativeMetalDiagnostics.log("CORE_SLOT_ACTIVE", "slot=none generation=\(generation)")
+    }
+
+    func resolve(_ symbolName: String) -> (symbol: UnsafeMutableRawPointer, generation: UInt64)? {
+        lock.lock()
+        defer { lock.unlock() }
+
+        guard let activeHandle,
+              let symbol = dlsym(activeHandle, symbolName) else {
+            return nil
+        }
+        return (symbol, generation)
+    }
+
+    func currentGeneration() -> UInt64 {
+        lock.lock()
+        defer { lock.unlock() }
+
+        return generation
+    }
+}
+
 @MainActor
 final class EmulatorCoreRuntime: ObservableObject {
     enum RunState: Equatable {
@@ -85,21 +144,38 @@ final class EmulatorCoreRuntime: ObservableObject {
     private typealias QemuSystemResetRequest = @convention(c) (Int32) -> Void
 
     private static let qemuShutdownCauseGuestReset: Int32 = 7
+    private static let coreSlotCount = 3
 
     @Published private(set) var state: RunState
 
-    private var handle: UnsafeMutableRawPointer?
-    private var entryPoint: XemuMain?
-    private var primeCoroutines: XemuPrimeCoroutines?
-    private var setExternalMetalLayer: XemuSetExternalMetalLayer?
-    private var requestShutdown: XemuRequestShutdown?
-    private var requestSystemReset: QemuSystemResetRequest?
-    private var setXboxCameraFrameProvider: XemuSetXboxCameraFrameProvider?
-    private var setGameplayTouchCallback: XemuSetGameplayTouchCallback?
-    private var setInputDiagnosticCallback: XemuSetInputDiagnosticCallback?
+    var isCoreSlotLimitReached: Bool {
+        !coreSlots.isEmpty && reservedCoreSlotIndex == nil && nextCoreSlotIndex >= coreSlots.count
+    }
+
+    private struct CoreSlot {
+        let index: Int
+        let url: URL
+        var handle: UnsafeMutableRawPointer?
+        var entryPoint: XemuMain?
+        var primeCoroutines: XemuPrimeCoroutines?
+        var setExternalMetalLayer: XemuSetExternalMetalLayer?
+        var requestShutdown: XemuRequestShutdown?
+        var requestSystemReset: QemuSystemResetRequest?
+        var setXboxCameraFrameProvider: XemuSetXboxCameraFrameProvider?
+        var setGameplayTouchCallback: XemuSetGameplayTouchCallback?
+        var setInputDiagnosticCallback: XemuSetInputDiagnosticCallback?
+    }
+
+    private var coreSlots: [CoreSlot]
+    private var nextCoreSlotIndex = 0
+    private var reservedCoreSlotIndex: Int?
+    private var activeCoreSlotIndex: Int?
 
     init(bundle: Bundle = .main) {
-        state = Self.resolveCoreURL(in: bundle).map(RunState.ready) ??
+        coreSlots = Self.resolveCoreSlotURLs(in: bundle).enumerated().map { index, url in
+            CoreSlot(index: index, url: url)
+        }
+        state = coreSlots.first.map { RunState.ready($0.url) } ??
             .unavailable("libxemu-ios-core.dylib is not embedded.")
         NSLog("Xemu core runtime initialized: %@", String(describing: state))
     }
@@ -108,7 +184,18 @@ final class EmulatorCoreRuntime: ObservableObject {
         guard !state.isRunning else {
             return
         }
-        state = Self.resolveCoreURL(in: bundle).map(RunState.ready) ??
+
+        let slotURLs = Self.resolveCoreSlotURLs(in: bundle)
+        if slotURLs.map(\.path) != coreSlots.map(\.url.path) {
+            coreSlots = slotURLs.enumerated().map { index, url in
+                CoreSlot(index: index, url: url)
+            }
+            nextCoreSlotIndex = 0
+            reservedCoreSlotIndex = nil
+            activeCoreSlotIndex = nil
+        }
+
+        state = coreSlots.first.map { RunState.ready($0.url) } ??
             .unavailable("libxemu-ios-core.dylib is not embedded.")
         NSLog("Xemu core runtime refreshed: %@", String(describing: state))
     }
@@ -119,18 +206,20 @@ final class EmulatorCoreRuntime: ObservableObject {
         }
 
         do {
-            let entryPoint = try loadEntryPoint()
+            let coreSlotIndex = try reserveCoreSlotForNextLaunch()
+            let entryPoint = try loadEntryPoint(forSlotAt: coreSlotIndex)
             let arguments = plan.arguments
             let jitMode = plan.jitMode
             let universalJITEnabled = plan.universalJITEnabled
             let xboxCameraEnabled = plan.xboxCameraEnabled
             let xboxHeadsetMicEnabled = plan.xboxHeadsetMicEnabled
-            let setExternalMetalLayer = loadSetExternalMetalLayer()
-            let requestShutdown = loadRequestShutdown()
-            let requestSystemReset = loadRequestSystemReset()
-            let setXboxCameraFrameProvider = loadSetXboxCameraFrameProvider()
-            let setGameplayTouchCallback = loadSetGameplayTouchCallback()
+            let setExternalMetalLayer = loadSetExternalMetalLayer(forSlotAt: coreSlotIndex)
+            let requestShutdown = loadRequestShutdown(forSlotAt: coreSlotIndex)
+            let requestSystemReset = loadRequestSystemReset(forSlotAt: coreSlotIndex)
+            let setXboxCameraFrameProvider = loadSetXboxCameraFrameProvider(forSlotAt: coreSlotIndex)
+            let setGameplayTouchCallback = loadSetGameplayTouchCallback(forSlotAt: coreSlotIndex)
             let setInputDiagnosticCallback: XemuSetInputDiagnosticCallback? = nil
+            let coreSlot = coreSlots[coreSlotIndex]
 
             let logURL = Self.prepareRunLog(for: plan, arguments: arguments)
             let cameraLogURL = Self.prepareCameraDiagnosticLog(
@@ -144,7 +233,13 @@ final class EmulatorCoreRuntime: ObservableObject {
                 cameraLogURL: cameraLogURL
             )
             state = .running(plan.gameName)
-            NSLog("Launching Xemu core for %@", plan.gameName)
+            markCoreSlotLaunched(coreSlotIndex)
+            NSLog(
+                "Launching Xemu core slot %d for %@ from %@",
+                coreSlot.index,
+                plan.gameName,
+                coreSlot.url.path
+            )
             if let logURL {
                 NSLog("Xemu run log: %@", logURL.path)
             }
@@ -179,6 +274,9 @@ final class EmulatorCoreRuntime: ObservableObject {
                 let status = Self.invoke(
                     entryPoint,
                     arguments: arguments,
+                    coreSlotIndex: coreSlot.index,
+                    coreSlotURL: coreSlot.url,
+                    coreHandle: coreSlot.handle,
                     jitMode: jitMode,
                     universalJITEnabled: universalJITEnabled,
                     xboxCameraEnabled: xboxCameraEnabled,
@@ -200,6 +298,7 @@ final class EmulatorCoreRuntime: ObservableObject {
 
                 Task { @MainActor [weak self] in
                     NSLog("Xemu core exited with status %d", status)
+                    self?.clearActiveCoreSlot(coreSlotIndex)
                     self?.state = .exited(status)
                 }
             }
@@ -219,21 +318,55 @@ final class EmulatorCoreRuntime: ObservableObject {
             return
         }
 
-        _ = try loadEntryPoint()
-        let primeCoroutines = try loadPrimeCoroutines()
+        let coreSlotIndex = try reserveCoreSlotForNextLaunch()
+        _ = try loadEntryPoint(forSlotAt: coreSlotIndex)
+        let primeCoroutines = try loadPrimeCoroutines(forSlotAt: coreSlotIndex)
         NSLog("Pre-priming Xemu coroutine pool before StikJIT: %u", coroutineReserve)
         primeCoroutines(coroutineReserve)
     }
 
-    private func loadEntryPoint() throws -> XemuMain {
-        if let entryPoint {
-            return entryPoint
-        }
-
-        guard let coreURL = Self.resolveCoreURL(in: .main) else {
+    private func reserveCoreSlotForNextLaunch() throws -> Int {
+        guard !coreSlots.isEmpty else {
             throw RuntimeError.missingCore
         }
 
+        if let reservedCoreSlotIndex {
+            return reservedCoreSlotIndex
+        }
+
+        guard nextCoreSlotIndex < coreSlots.count else {
+            throw RuntimeError.coreSlotsExhausted(limit: coreSlots.count)
+        }
+
+        let index = nextCoreSlotIndex
+        reservedCoreSlotIndex = index
+        return index
+    }
+
+    private func markCoreSlotLaunched(_ index: Int) {
+        if reservedCoreSlotIndex == index {
+            reservedCoreSlotIndex = nil
+        }
+        activeCoreSlotIndex = index
+        nextCoreSlotIndex = index + 1
+    }
+
+    private func clearActiveCoreSlot(_ index: Int) {
+        guard activeCoreSlotIndex == index else {
+            return
+        }
+
+        let handle = coreSlots.indices.contains(index) ? coreSlots[index].handle : nil
+        activeCoreSlotIndex = nil
+        XemuCoreRuntimeSymbolResolver.shared.deactivate(handle: handle)
+    }
+
+    private func loadEntryPoint(forSlotAt index: Int) throws -> XemuMain {
+        if let entryPoint = coreSlots[index].entryPoint {
+            return entryPoint
+        }
+
+        let coreURL = coreSlots[index].url
         NSLog("Loading Xemu core dylib from %@", coreURL.path)
         let openFlags = RTLD_NOW | RTLD_LOCAL
         guard let handle = dlopen(coreURL.path, openFlags) else {
@@ -245,19 +378,19 @@ final class EmulatorCoreRuntime: ObservableObject {
         }
 
         NSLog("Resolved xemu_ios_main")
-        self.handle = handle
+        coreSlots[index].handle = handle
         let entryPoint = unsafeBitCast(symbol, to: XemuMain.self)
-        self.entryPoint = entryPoint
+        coreSlots[index].entryPoint = entryPoint
         return entryPoint
     }
 
-    private func loadPrimeCoroutines() throws -> XemuPrimeCoroutines {
-        if let primeCoroutines {
+    private func loadPrimeCoroutines(forSlotAt index: Int) throws -> XemuPrimeCoroutines {
+        if let primeCoroutines = coreSlots[index].primeCoroutines {
             return primeCoroutines
         }
 
-        _ = try loadEntryPoint()
-        guard let handle else {
+        _ = try loadEntryPoint(forSlotAt: index)
+        guard let handle = coreSlots[index].handle else {
             throw RuntimeError.missingCore
         }
 
@@ -267,16 +400,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_coroutine_prime_global_pool")
         let primeCoroutines = unsafeBitCast(symbol, to: XemuPrimeCoroutines.self)
-        self.primeCoroutines = primeCoroutines
+        coreSlots[index].primeCoroutines = primeCoroutines
         return primeCoroutines
     }
 
-    private func loadSetExternalMetalLayer() -> XemuSetExternalMetalLayer? {
-        if let setExternalMetalLayer {
+    private func loadSetExternalMetalLayer(forSlotAt index: Int) -> XemuSetExternalMetalLayer? {
+        if let setExternalMetalLayer = coreSlots[index].setExternalMetalLayer {
             return setExternalMetalLayer
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -287,16 +420,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_set_external_metal_layer")
         let setter = unsafeBitCast(symbol, to: XemuSetExternalMetalLayer.self)
-        setExternalMetalLayer = setter
+        coreSlots[index].setExternalMetalLayer = setter
         return setter
     }
 
-    private func loadRequestShutdown() -> XemuRequestShutdown? {
-        if let requestShutdown {
+    private func loadRequestShutdown(forSlotAt index: Int) -> XemuRequestShutdown? {
+        if let requestShutdown = coreSlots[index].requestShutdown {
             return requestShutdown
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -307,16 +440,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_request_shutdown")
         let requestShutdown = unsafeBitCast(symbol, to: XemuRequestShutdown.self)
-        self.requestShutdown = requestShutdown
+        coreSlots[index].requestShutdown = requestShutdown
         return requestShutdown
     }
 
-    private func loadRequestSystemReset() -> QemuSystemResetRequest? {
-        if let requestSystemReset {
+    private func loadRequestSystemReset(forSlotAt index: Int) -> QemuSystemResetRequest? {
+        if let requestSystemReset = coreSlots[index].requestSystemReset {
             return requestSystemReset
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -327,16 +460,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved qemu_system_reset_request")
         let requestSystemReset = unsafeBitCast(symbol, to: QemuSystemResetRequest.self)
-        self.requestSystemReset = requestSystemReset
+        coreSlots[index].requestSystemReset = requestSystemReset
         return requestSystemReset
     }
 
-    private func loadSetXboxCameraFrameProvider() -> XemuSetXboxCameraFrameProvider? {
-        if let setXboxCameraFrameProvider {
+    private func loadSetXboxCameraFrameProvider(forSlotAt index: Int) -> XemuSetXboxCameraFrameProvider? {
+        if let setXboxCameraFrameProvider = coreSlots[index].setXboxCameraFrameProvider {
             return setXboxCameraFrameProvider
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -347,16 +480,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_set_xbox_camera_frame_provider")
         let setter = unsafeBitCast(symbol, to: XemuSetXboxCameraFrameProvider.self)
-        setXboxCameraFrameProvider = setter
+        coreSlots[index].setXboxCameraFrameProvider = setter
         return setter
     }
 
-    private func loadSetGameplayTouchCallback() -> XemuSetGameplayTouchCallback? {
-        if let setGameplayTouchCallback {
+    private func loadSetGameplayTouchCallback(forSlotAt index: Int) -> XemuSetGameplayTouchCallback? {
+        if let setGameplayTouchCallback = coreSlots[index].setGameplayTouchCallback {
             return setGameplayTouchCallback
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -367,16 +500,16 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_set_gameplay_touch_event_callback")
         let setter = unsafeBitCast(symbol, to: XemuSetGameplayTouchCallback.self)
-        setGameplayTouchCallback = setter
+        coreSlots[index].setGameplayTouchCallback = setter
         return setter
     }
 
-    private func loadSetInputDiagnosticCallback() -> XemuSetInputDiagnosticCallback? {
-        if let setInputDiagnosticCallback {
+    private func loadSetInputDiagnosticCallback(forSlotAt index: Int) -> XemuSetInputDiagnosticCallback? {
+        if let setInputDiagnosticCallback = coreSlots[index].setInputDiagnosticCallback {
             return setInputDiagnosticCallback
         }
 
-        guard let handle else {
+        guard let handle = coreSlots[index].handle else {
             return nil
         }
 
@@ -387,7 +520,7 @@ final class EmulatorCoreRuntime: ObservableObject {
 
         NSLog("Resolved xemu_ios_set_input_diagnostic_callback")
         let setter = unsafeBitCast(symbol, to: XemuSetInputDiagnosticCallback.self)
-        setInputDiagnosticCallback = setter
+        coreSlots[index].setInputDiagnosticCallback = setter
         return setter
     }
 
@@ -541,6 +674,9 @@ final class EmulatorCoreRuntime: ObservableObject {
     private static func invoke(
         _ entryPoint: XemuMain,
         arguments: [String],
+        coreSlotIndex: Int,
+        coreSlotURL: URL,
+        coreHandle: UnsafeMutableRawPointer?,
         jitMode: RuntimeJITMode,
         universalJITEnabled: Bool,
         xboxCameraEnabled: Bool,
@@ -669,6 +805,15 @@ final class EmulatorCoreRuntime: ObservableObject {
         var gameplayTouchCallbackRegistered = false
         var inputDiagnosticCallbackRegistered = false
 
+        XemuCoreRuntimeSymbolResolver.shared.activate(
+            handle: coreHandle,
+            slotIndex: coreSlotIndex,
+            coreURL: coreSlotURL
+        )
+        defer {
+            XemuCoreRuntimeSymbolResolver.shared.deactivate(handle: coreHandle)
+        }
+
         if let layerPointer = presenterHost.start(
             session: session,
             onExitRequested: {
@@ -737,14 +882,24 @@ final class EmulatorCoreRuntime: ObservableObject {
         }
     }
 
-    private static func resolveCoreURL(in bundle: Bundle) -> URL? {
+    private static func resolveCoreSlotURLs(in bundle: Bundle) -> [URL] {
         let frameworksURL = bundle.privateFrameworksURL
-        let coreURL = frameworksURL?.appendingPathComponent("libxemu-ios-core.dylib")
-
-        guard let coreURL, FileManager.default.fileExists(atPath: coreURL.path) else {
-            return nil
+        guard let frameworksURL else {
+            return []
         }
-        return coreURL
+
+        let slotURLs = (0..<coreSlotCount).map {
+            frameworksURL.appendingPathComponent("libxemu-ios-core-slot\($0).dylib")
+        }
+        if slotURLs.allSatisfy({ FileManager.default.fileExists(atPath: $0.path) }) {
+            return slotURLs
+        }
+
+        let coreURL = frameworksURL.appendingPathComponent("libxemu-ios-core.dylib")
+        guard FileManager.default.fileExists(atPath: coreURL.path) else {
+            return []
+        }
+        return [coreURL]
     }
 
     private static func dynamicLoaderError() -> String {
@@ -758,6 +913,7 @@ final class EmulatorCoreRuntime: ObservableObject {
 private enum RuntimeError: LocalizedError {
     case missingCore
     case dynamicLoader(String)
+    case coreSlotsExhausted(limit: Int)
 
     var errorDescription: String? {
         switch self {
@@ -765,6 +921,8 @@ private enum RuntimeError: LocalizedError {
             return "libxemu-ios-core.dylib is not embedded."
         case .dynamicLoader(let message):
             return message
+        case .coreSlotsExhausted(let limit):
+            return "DukeX has used all \(limit) disposable core slots for this session. Restart DukeX to clear the core slots before launching another game."
         }
     }
 }
