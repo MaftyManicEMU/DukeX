@@ -1463,7 +1463,54 @@ static void create_texture(PGRAPHState *pg, int texture_idx)
         } else if (border_color_pack32 == 0xff000000) {
             vk_border_color = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
         } else {
-            vk_border_color = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+            /*
+             * Metal cannot represent arbitrary sampler border colors, so
+             * MoltenVK does not expose VK_EXT_custom_border_color. Preserve
+             * alpha when choosing the nearest standard Vulkan border color;
+             * mapping a transparent colored border to opaque white turns
+             * border-addressed HUD glows into bright rectangular quads.
+             */
+            uint32_t border_a = border_color_pack32 >> 24;
+            if (border_a < 0x80) {
+                vk_border_color = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+            } else {
+                uint32_t border_r = (border_color_pack32 >> 16) & 0xff;
+                uint32_t border_g = (border_color_pack32 >> 8) & 0xff;
+                uint32_t border_b = border_color_pack32 & 0xff;
+                uint32_t border_lum =
+                    (border_r * 54 + border_g * 183 + border_b * 19) >> 8;
+                vk_border_color = border_lum >= 0x80 ?
+                                      VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE :
+                                      VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+            }
+
+#ifdef CONFIG_IOS
+            static uint32_t logged_border_colors[32];
+            static size_t logged_border_color_count;
+            bool already_logged = false;
+
+            for (size_t i = 0; i < logged_border_color_count; i++) {
+                if (logged_border_colors[i] == border_color_pack32) {
+                    already_logged = true;
+                    break;
+                }
+            }
+            if (!already_logged &&
+                logged_border_color_count < ARRAY_SIZE(logged_border_colors)) {
+                logged_border_colors[logged_border_color_count++] =
+                    border_color_pack32;
+                fprintf(stderr,
+                        "xemu-ios: approximating sampler border color "
+                        "0x%08x as %s\n",
+                        border_color_pack32,
+                        vk_border_color ==
+                                VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK ?
+                            "transparent black" :
+                        vk_border_color == VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE ?
+                            "opaque white" :
+                            "opaque black");
+            }
+#endif
         }
     }
 
