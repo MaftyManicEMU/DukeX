@@ -1,4 +1,5 @@
 import Foundation
+import ImageIO
 import UniformTypeIdentifiers
 
 struct LibraryFile: Identifiable, Equatable {
@@ -174,6 +175,7 @@ enum GameLibraryExportLink {
     }
 
     private static let callbackHost = "dukex"
+    private static let coverJPEGQuality = 0.7
 
     static func callbackScheme(from url: URL) -> String? {
         guard url.scheme?.caseInsensitiveCompare(GameLaunchLink.scheme) == .orderedSame else {
@@ -227,8 +229,7 @@ enum GameLibraryExportLink {
     }
 
     private static func exportedGame(from game: LibraryFile, metadata: GameListMetadata?) -> ExportedGame? {
-        guard let titleID = GameLaunchLink.normalizedTitleID(game.titleID),
-              let launchURL = GameLaunchLink.externalGameURL(for: game) else {
+        guard let titleID = GameLaunchLink.normalizedTitleID(game.titleID) else {
             return nil
         }
 
@@ -236,40 +237,59 @@ enum GameLibraryExportLink {
         let titleName = metadataTitle?.isEmpty == false ? metadataTitle! : game.displayName
 
         return ExportedGame(
-            titleName: titleName,
-            version: "1.0",
-            iconData: iconData(for: game),
-            titleId: titleID,
-            titleID: titleID,
             id: titleID,
+            titleName: titleName,
+            titleId: titleID,
             developer: metadata?.studio.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            launchURL: launchURL.absoluteString,
-            launchUrl: launchURL.absoluteString,
-            url: launchURL.absoluteString,
-            fileName: game.fileName,
-            platform: "Xbox"
+            version: "1.0",
+            iconData: iconData(for: game)
         )
     }
 
     private static func encodedPayload(for games: [ExportedGame]) -> String? {
-        guard let data = try? JSONEncoder().encode(games) else {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .withoutEscapingSlashes
+        guard let data = try? encoder.encode(games) else {
             return nil
         }
 
-        return data
-            .base64EncodedString()
+        return base64URLEncode(data)
+    }
+
+    /// Inverse of ManicEMU `GameScheme.base64URLDecode`. Query strings treat `+` as space and `/` is not URL-safe.
+    private static func base64URLEncode(_ data: Data) -> String {
+        data.base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")
             .trimmingTrailingBase64Padding()
     }
 
-    private static func iconData(for game: LibraryFile) -> String {
+    private static func iconData(for game: LibraryFile) -> Data? {
         guard let coverURL = game.coverURL,
-              let data = try? Data(contentsOf: coverURL) else {
-            return ""
+              let source = CGImageSourceCreateWithURL(coverURL as CFURL, nil),
+              let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+            return nil
         }
 
-        return data.base64EncodedString()
+        let jpeg = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(
+            jpeg,
+            UTType.jpeg.identifier as CFString,
+            1,
+            nil
+        ) else {
+            return nil
+        }
+
+        let destinationOptions: [CFString: Any] = [
+            kCGImageDestinationLossyCompressionQuality: coverJPEGQuality
+        ]
+        CGImageDestinationAddImage(destination, image, destinationOptions as CFDictionary)
+        guard CGImageDestinationFinalize(destination) else {
+            return nil
+        }
+
+        return jpeg as Data
     }
 
     private static func isValidCallbackScheme(_ scheme: String) -> Bool {
@@ -282,19 +302,14 @@ enum GameLibraryExportLink {
         return scheme.unicodeScalars.allSatisfy { allowedCharacters.contains($0) }
     }
 
+    /// Matches ManicEMU `GameScheme`; `id` must equal `titleId`.
     private struct ExportedGame: Encodable {
-        let titleName: String
-        let version: String
-        let iconData: String
-        let titleId: String
-        let titleID: String
         let id: String
+        let titleName: String
+        let titleId: String
         let developer: String
-        let launchURL: String
-        let launchUrl: String
-        let url: String
-        let fileName: String
-        let platform: String
+        let version: String
+        let iconData: Data?
     }
 }
 
